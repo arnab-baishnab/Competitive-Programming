@@ -1,0 +1,129 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+const int MAX = 55 ;
+
+int n , K , src , snk   ;
+
+int dis[MAX] , par[MAX] , mCap[MAX] , pos[MAX] ;
+
+bool vis[MAX] ;
+
+struct Edge{
+    int to , rev_pos , cap , cost , flow ;
+};
+
+vector<Edge> ed[MAX] ;
+
+void init(int _N,int _src,int _snk){
+     n =_N , src = _src , snk=_snk ;
+     for(int i=1;i<=n;++i)
+        ed[i].clear() ;
+}
+
+void addEdge(int u,int v,int cap,int cost){
+  Edge a = {v,ed[v].size(),cap,cost,0} ;
+  Edge b = {u,ed[u].size(),0,-cost,0} ;
+  ed[u].push_back(a) ;
+  ed[v].push_back(b) ;
+}
+
+inline bool SPFA(){
+    int i , u , v ;
+    memset(vis,0,sizeof(vis)) ;
+    for(int i=1;i<=n;++i)
+        mCap[i]=dis[i]=INF ;
+    queue<int>q ;
+    dis[src]=0 ;
+    vis[src]=true ;
+    q.push(src) ;
+
+    while(!q.empty()){
+        u = q.front() ;
+        q.pop() ;
+        vis[u]=false ;
+        for(i=0;i<ed[u].size();++i){
+            Edge &e = ed[u][i] ;
+            v = e.to ;
+            if( e.cap>e.flow and dis[v]>dis[u]+e.cost){
+                dis[v]=dis[u]+e.cost ;
+                par[v]=u ;
+                pos[v]=i ;
+                mCap[v]=min(mCap[u],e.cap-e.flow) ;
+                if(!vis[v]){
+                    vis[v]=true ;
+                    q.push(v) ;
+                }
+            }
+        }
+    }
+    return dis[snk]!=INF ;
+}
+
+inline pair<int,int>MCMF(){
+    int F=0 , C=0 , f , u , v ;
+    while(SPFA()){
+        u=snk ;
+        f=mCap[u] ;
+
+        while(u!=src){
+            v = par[u] ;
+            ed[v][pos[u]].flow+=f ;
+            ed[u][ed[v][pos[u]].rev_pos].flow-=f ;
+            u=v ;
+        }
+
+        if(C+dis[snk]*f>K){
+            if(dis[snk]){
+               F+=(K-C)/dis[snk] ;
+               C+=((K-C)/dis[snk])*dis[snk] ;
+            }
+            return {F,C} ;
+        }
+
+        F+=f ;
+        C+=dis[snk]*f ;
+    }
+    return {F,C} ;
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>n>>K ;
+
+    init(n,1,n) ;
+
+    for(int i=1;i<=n;++i){
+        for(int j=1;j<=n;++j){
+            int x ;
+            cin>>x ;
+            if(x!=0){
+                addEdge(i,j,x,0) ;
+                addEdge(i,j,1010,1) ;
+            }
+        }
+    }
+
+    cout<<MCMF().first<<endl ;
+
+    return 0 ;
+}
