@@ -1,0 +1,96 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=2e5+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+const int maxn=1e5+7 ;
+
+int lvl[maxn] , sub[maxn] , p[maxn] , del[maxn] , d[18][maxn] , ans[maxn] ;
+
+vector<int>adj[N] ;
+
+void calc(int u,int par){
+     sub[u]=1 ;
+     for(int v:adj[u])if(v-par and !del[v])
+        calc(v,u) , sub[u]+=sub[v] ;
+}
+
+int centroid(int u,int par,int r){
+    for(int v:adj[u])if(v-par and !del[v])
+        if(sub[v]>r)return centroid(v,u,r) ;
+    return u ;
+}
+
+void dfs(int l,int u,int par){
+     if(par+1)d[l][u]=d[l][par]+1 ;
+     for(int v:adj[u])if(v-par and !del[v])
+        dfs(l,v,u) ;
+}
+
+void decompose(int u,int par){
+    calc(u,-1) ;
+    int c=centroid(u,-1,sub[u]>>1) ;
+    del[c]=1 , p[c]=par ;
+    if(par+1)lvl[c]=lvl[par]+1 ;
+    dfs(lvl[c],c,-1) ;
+    for(int v:adj[c])if(v-par and !del[v])
+        decompose(v,c) ;
+}
+
+void update(int u){
+     for(int v=u;v+1;v=p[v])
+        ans[v]=min(ans[v],d[lvl[v]][u]) ;
+}
+
+int query(int u){
+    int ret = 1e9 ;
+    for(int v=u;v+1;v=p[v])
+        ret=min(ret,ans[v]+d[lvl[v]][u]) ;
+    return ret ;
+}
+
+int32_t main()
+{
+    IOS
+
+    int  n , m ;
+
+    cin>>n>>m ;
+
+    for(int i=1;i<n;++i){
+        int  u , v ;
+        cin>>u>>v ;
+        adj[u].push_back(v) ;
+        adj[v].push_back(u) ;
+    }
+
+    decompose(1,-1) ;
+
+    for(int i=1;i<=n;++i)ans[i]=1e9 ;
+
+    update(1) ;
+
+    while(m--){
+        int t,u ;
+        cin>>t>>u ;
+        if(t==1)update(u) ;
+        else cout<<query(u)<<endl ;
+    }
+
+    return 0 ;
+}
