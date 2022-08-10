@@ -1,129 +1,91 @@
-#include<bits/stdc++.h>
-using namespace std;
-#define   MP             make_pair
-#define   PB             push_back
-#define   nn             '\n'
-#define   endl           '\n'
-#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
-#define   all(vec)       vec.begin(),vec.end()
-#define   int            long long
-#define   pii            pair<int,int>
-#define   pdd            pair<double,double>
+const ll maxnodes = 10005;
 
-typedef long long LL ;
+ll nodes = maxnodes, src, dest;
+ll dist[maxnodes], exist[maxnodes];
+pll par[maxnodes];
 
-const int MOD=1e9+7,Base=998244353 ;
-const int N=1e6+7 ;
-const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
-const double pie=acos(-1.0) ;
-const double EPS=1e-9 ;
-const int MAX = 55 ;
-
-int n , K , src , snk   ;
-
-int dis[MAX] , par[MAX] , mCap[MAX] , pos[MAX] ;
-
-bool vis[MAX] ;
-
-struct Edge{
-    int to , rev_pos , cap , cost , flow ;
+struct Edge
+{
+    ll to, rev;
+    ll f, cap, cost;
 };
 
-vector<Edge> ed[MAX] ;
+vector<Edge> g[maxnodes];
 
-void init(int _N,int _src,int _snk){
-     n =_N , src = _src , snk=_snk ;
-     for(int i=1;i<=n;++i)
-        ed[i].clear() ;
-}
-
-void addEdge(int u,int v,int cap,int cost){
-  Edge a = {v,ed[v].size(),cap,cost,0} ;
-  Edge b = {u,ed[u].size(),0,-cost,0} ;
-  ed[u].push_back(a) ;
-  ed[v].push_back(b) ;
-}
-
-inline bool SPFA(){
-    int i , u , v ;
-    memset(vis,0,sizeof(vis)) ;
-    for(int i=1;i<=n;++i)
-        mCap[i]=dis[i]=INF ;
-    queue<int>q ;
-    dis[src]=0 ;
-    vis[src]=true ;
-    q.push(src) ;
-
-    while(!q.empty()){
-        u = q.front() ;
-        q.pop() ;
-        vis[u]=false ;
-        for(i=0;i<ed[u].size();++i){
-            Edge &e = ed[u][i] ;
-            v = e.to ;
-            if( e.cap>e.flow and dis[v]>dis[u]+e.cost){
-                dis[v]=dis[u]+e.cost ;
-                par[v]=u ;
-                pos[v]=i ;
-                mCap[v]=min(mCap[u],e.cap-e.flow) ;
-                if(!vis[v]){
-                    vis[v]=true ;
-                    q.push(v) ;
-                }
-            }
-        }
-    }
-    return dis[snk]!=INF ;
-}
-
-inline pair<int,int>MCMF(){
-    int F=0 , C=0 , f , u , v ;
-    while(SPFA()){
-        u=snk ;
-        f=mCap[u] ;
-
-        while(u!=src){
-            v = par[u] ;
-            ed[v][pos[u]].flow+=f ;
-            ed[u][ed[v][pos[u]].rev_pos].flow-=f ;
-            u=v ;
-        }
-
-        if(C+dis[snk]*f>K){
-            if(dis[snk]){
-               F+=(K-C)/dis[snk] ;
-               C+=((K-C)/dis[snk])*dis[snk] ;
-            }
-            return {F,C} ;
-        }
-
-        F+=f ;
-        C+=dis[snk]*f ;
-    }
-    return {F,C} ;
-}
-
-int32_t main()
+void addEdge(ll s, ll t, ll cap, ll cost)
 {
-    IOS
+    Edge a = {t, g[t].size(), 0, cap, cost};
+    Edge b = {s, g[s].size(), 0, 0, -cost};
+    g[s].push_back(a);
+    g[t].push_back(b);
+}
 
-    cin>>n>>K ;
+bool spfa()
+{
+    fill(dist, dist + nodes, inf);
+    fill(exist, exist + nodes, 0);
 
-    init(n,1,n) ;
+    dist[src] = 0, exist[src] = 1;
+    queue <ll> q;
+    q.push(src);
 
-    for(int i=1;i<=n;++i){
-        for(int j=1;j<=n;++j){
-            int x ;
-            cin>>x ;
-            if(x!=0){
-                addEdge(i,j,x,0) ;
-                addEdge(i,j,1010,1) ;
+    while(!q.empty()) {
+        ll u = q.front();
+        q.pop();
+        exist[u] = 0;
+
+        for(ll i = 0; i < g[u].size(); i++) {
+
+            Edge e = g[u][i];
+
+            if(dist[e.to] > dist[u] + e.cost && e.f < e.cap) {
+
+                dist[e.to] = dist[u] + e.cost;
+                par[e.to] = mp(u, i);
+
+                if(!exist[e.to]) {
+                    q.push(e.to);
+                    exist[e.to] = 1;
+                }
+
             }
         }
     }
 
-    cout<<MCMF().first<<endl ;
-
-    return 0 ;
+    return dist[dest] != inf;
 }
+
+pll minCostMaxFlow(ll _src, ll _dest)
+{
+    src = _src;
+    dest = _dest;
+    pll result = mp(0,0);
+    while (spfa())
+    {
+        ll cur = _dest, flow = inf;
+        while(cur != _src) {
+            ll p = par[cur].first;
+            Edge e = g[p][ par[cur].second ];
+            flow = min(flow, e.cap - e.f);
+
+            cur = p;
+        }
+        result.first += flow;
+
+        cur = _dest;
+        while(cur != _src) {
+            ll p = par[cur].first;
+            Edge &e = g[p][ par[cur].second ];
+
+            e.f += flow;
+            g[e.to][e.rev].f -= flow;
+
+            result.second += flow * e.cost;
+
+            cur = p;
+        }
+    }
+    return result;
+}
+// addEdge(u, v, C, cst); edge from u to v. Capacity=C, Cost=cst.
+// minCostMaxFlow(s, t); min cost max flow from s to t
