@@ -1,0 +1,24 @@
+   /// learnt from https://codeforces.com/contest/394/submission/13185760
+   
+   long double dist=1e100 ;
+
+    Point nw=rp ;
+
+    for(int i=0;i<m;++i){
+        long double l=0 , r=1 , m1 , m2 ;
+        for(int it=1;it<=100;++it){
+            m1=l*.51+r*.49 ;     
+            m2=l*.49+r*.51 ;
+            Point p1=yo[i]+(yo[i+1]-yo[i])*m1 ;
+            Point p2=yo[i]+(yo[i+1]-yo[i])*m2 ;
+            long double v1=(p1-rp).dis() ;
+            long double v2=(p2-rp).dis() ;
+            if(v1<v2)
+                r=m2 ;
+            else
+                l=m1 ;
+        }
+        Point now=yo[i]+(yo[i+1]-yo[i])*(l+r)*.5 ;
+        if((now-rp).dis()<dist)
+            dist=(now-rp).dis() , nw=now ;
+    }
