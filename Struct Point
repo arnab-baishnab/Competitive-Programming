@@ -1,3 +1,5 @@
+/// learnt from https://codeforces.com/contest/394/submission/13185760
+
 
 struct Point{
     long double x,y ;
