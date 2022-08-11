@@ -1,0 +1,34 @@
+
+struct Point{
+    long double x,y ;
+    Point(long double _x=0 , long double _y=0){x=_x , y=_y ;}
+    Point operator-(const Point& b){return Point(x-b.x,y-b.y);}
+    Point operator+(const Point& b){return Point(x+b.x,y+b.y);}
+    Point operator/(long double v){return Point(x/v,y/v);}
+    Point operator*(long double v){return Point(x*v,y*v);}
+
+    long double dis(){
+        return x*x+y*y ;
+    }
+    long double calco(Point arr[]){
+         long double ans=0 ;
+         for(int i=1;i<=n;++i)
+            ans+=(arr[i]-(*this)).dis() ;
+         return ans ;
+    }
+}p[100010],yo[100010];
+
+
+int main(){
+
+    Point rp(0,0) ;
+ 
+    for(int i=1;i<=n;++i){
+        long double x , y ;
+        cin>>x>>y ;
+        p[i]=Point(x,y) ;
+        rp=rp+p[i] ;
+    }
+ 
+    rp=rp/n ;
+}
