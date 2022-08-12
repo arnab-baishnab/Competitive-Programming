@@ -8,6 +8,9 @@ struct Point{
     Point operator+(const Point& b){return Point(x+b.x,y+b.y);}
     Point operator/(long double v){return Point(x/v,y/v);}
     Point operator*(long double v){return Point(x*v,y*v);}
+    bool  operator<(const Point& rhs){
+          return x<rhs.x or (x==rhs.x and y<rhs.y) ;
+    }
 
     long double dis(){
         return x*x+y*y ;
