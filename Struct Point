@@ -21,6 +21,17 @@ struct Point{
 }p[100010],yo[100010];
 
 
+int Orientation(Point a[]){
+    long double res=0 ;
+    a[3]=a[0] ;
+    for(int i=0;i<3;++i){
+        res+=(a[i].x*a[i+1].y)-(a[i].y*a[i+1].x) ;
+    }
+    if(res<0.0)return -1 ; /// clockwise ...
+    else if(res>0.0)return +1 ; /// counterclockwise ...
+    return 0 ; /// colinear ...
+}
+
 int main(){
 
     Point rp(0,0) ;
