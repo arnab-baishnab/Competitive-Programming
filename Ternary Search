@@ -22,3 +22,22 @@
         if((now-rp).dis()<dist)
             dist=(now-rp).dis() , nw=now ;
     }
+
+/// learnt from https://codeforces.com/contest/98/submission/57618653 
+
+
+double ternary_search(double lo,double hi){
+while(lo+EPS<=hi){
+    double m1=(lo*2.0+hi)/3.0 ;
+    double m2=(lo+hi*2.0)/3.0 ;
+
+    double v1=val(m1) ;
+    double v2=val(m2) ;
+
+    if(v1<v2)
+        hi=m2 ;
+    else
+        lo=m1 ;
+}
+return val((lo+hi)/2.0) ;
+}
