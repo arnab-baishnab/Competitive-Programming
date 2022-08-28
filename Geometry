@@ -1,0 +1,179 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+double w , h , a ;
+
+struct line
+{
+    double a , b , c ;
+    line(){}
+    line(pdd A , pdd B)
+    {
+    a = B.second - A.second;
+    b = A.first - B.first;
+    c = a*(A.first) + b*(A.second);
+    c = -c ;  /// ax + by + c = 0 format
+    }
+};
+
+pdd LineLineIntersection(line A, line B){
+    /// Line AB represented as a1x + b1y = c1
+    double a1 = A.a ;
+    double b1 = A.b ;
+    double c1 = -A.c ;
+
+    /// Line CD represented as a2x + b2y = c2
+    double a2 = B.a ;
+    double b2 = B.b ;
+    double c2 = -B.c ;
+
+    double determinant = a1*b2 - a2*b1;
+
+    if (determinant == 0){
+        // The lines are parallel. This is simplified
+        // by returning a pair of FLT_MAX
+        return make_pair(INF, INF);
+    }
+    else{
+        double x = (b2*c1 - b1*c2)/determinant;
+        double y = (a1*c2 - a2*c1)/determinant;
+        return make_pair(x, y);
+    }
+}
+
+double Radian(double x){
+    return x*pie/180.0 ;
+}
+
+pdd RotatePoint(pdd p, pdd o,double ang)
+{
+  double s = sin(Radian(ang)) ;
+  double c = cos(Radian(ang)) ;
+
+  /// translate point back to origin:
+  p.first -= o.first ;
+  p.second -= o.second ;
+
+  /// rotate point
+  double xnew = p.first * c - p.second * s ;
+  double ynew = p.first * s + p.second * c ;
+
+  /// translate point back:
+  p.first = xnew + o.first ;
+  p.second = ynew + o.second ;
+  return p ;
+}
+
+double Area(vector<pdd>pts) ;
+vector<pdd>Sort(vector<pdd>pts) ;
+
+int32_t main()
+{
+    IOS
+
+    double w , h , ang ;
+
+    cin>>w>>h>>ang ;
+
+    if(ang==180.0 or ang==360.0)
+    ang=0.0 ; 
+    
+    //if(w<h)swap(w,h) ;
+
+    w=.5*w ; h=.5*h ;
+
+    vector<pdd>pa , pb ;
+
+    vector<line>la , lb ;
+
+    pa.PB({w,h}) ;
+    pa.PB({-w,h}) ;
+    pa.PB({-w,-h}) ;
+    pa.PB({w,-h}) ;
+
+    for(int i=0;i<4;++i)
+    {
+        pb.PB(RotatePoint(pa[i],{0.0,0.0},ang)) ;
+    }
+
+    for(int i=0;i<4;++i)
+    {
+        la.PB(line(pa[i],pa[(i+1)%4])) ;
+        lb.PB(line(pb[i],pb[(i+1)%4])) ;
+    }
+
+    vector<pdd>pts ;
+
+    for(line La:la)
+    {
+        for(line Lb:lb)
+        {
+            pdd p=LineLineIntersection(La,Lb) ;
+            if(p.first==INF)continue ;
+            if(abs(p.first)<=w and abs(p.second)<=h)
+                pts.PB(p) ;
+        }
+    }
+
+    pts=Sort(pts) ;
+/**
+    for(pdd p:pts)
+        cout<<p.first<<' '<<p.second<<endl ;
+/**/
+    cout<<setprecision(10)<<fixed<<Area(pts)<<endl ;
+
+    return 0 ;
+}
+
+vector<pdd>Sort(vector<pdd>pts)
+{
+    vector<pdd>ng , pg ;
+
+    for(pdd p:pts)
+    {
+        if(p.second<0.0)
+            ng.PB(p) ;
+        else
+            pg.PB(p) ;
+    }
+
+    sort(all(ng)) ;
+
+    sort(all(pg)) ;
+
+    reverse(all(pg)) ;
+
+    for(int i=0;i<pg.size();++i)
+        ng.PB(pg[i]) ;
+
+    return ng ;
+}
+
+double Area(vector<pdd>pts)
+{
+   pts.PB(pts[0]) ;
+   double a=0 ;
+
+   for(int i=0;i<pts.size()-1;++i)
+    a+=pts[i].first*pts[i+1].second-pts[i].second*pts[i+1].first ;
+
+   a=a*.5 ; return abs(a) ;
+}
