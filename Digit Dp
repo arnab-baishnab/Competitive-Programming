@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int mod = 1000000007;
+const int maxn = 1005;
+
+int k;
+int cs;
+string v;
+int dp[maxn][2][maxn][2];
+int vis[maxn][2][maxn][2];
+
+int solve(int pos, bool isSmall, int last, bool found){
+    if(pos == maxn) return found;
+    if(isSmall && vis[pos][isSmall][last][found]) return dp[pos][isSmall][last][found];
+    if(vis[pos][isSmall][last][found] == cs)      return dp[pos][isSmall][last][found];
+    vis[pos][isSmall][last][found] = cs;
+
+    int cur = v[pos] - '0';
+    int lo = 0;
+    int hi = (isSmall ? 9 : cur);
+    int ret = 0;
+
+
+    for(int ch=lo; ch<=hi; ch++){
+        if(ch == 4 || ch == 7) ret += solve(pos+1, isSmall | (ch < cur), pos, found | (last && (pos - last <= k)));
+        else                   ret += solve(pos+1, isSmall | (ch < cur), last, found);
+        if(ret >= mod) ret -= mod;
+    }
+
+    return dp[pos][isSmall][last][found] = ret;
+}
+
+bool Check(string s){
+    int last = -1;
+    bool found = false;
+    for(int i=0; i < s.size(); i++){
+        if(s[i] == '4' || s[i] == '7') {
+            if(last >= 0 && (i - last <= k)) found = true;
+            last = i;
+        }
+    }
+    return found;
+}
+
+
+int solve(string s){
+    cs++;
+    reverse(s.begin(), s.end());
+    while(s.size() < maxn) s.push_back('0');
+    reverse(s.begin(), s.end());
+    v = s;
+    return solve(1, false, 0, false);
+}
+
+int main(){
+    int t;
+    scanf("%d %d",&t, &k);
+
+    while(t--){
+        string L, R;
+        cin >> L >> R;
+        int ans1 = solve(L);
+        int ans2 = solve(R);
+        int ans = ans2 - ans1 + Check(L);
+        if(ans < 0) ans += mod;
+        printf("%d\n", ans);
+    }
+}
