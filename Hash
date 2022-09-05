@@ -1,0 +1,112 @@
+/// palindrome check with double hashing 
+
+/// ac code of icpc preli 2021 
+
+#include<bits/stdc++.h>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   double         long double
+#define   ll             long long
+#define   uu             first
+#define   vv             second
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+
+pii operator+(pii a, ll x)     {return {a.uu + x, a.vv + x} ;}
+pii operator- (pii a, ll x)     {return {a.uu - x, a.vv - x} ;}
+pii operator* (pii a, ll x)     {return {a.uu * x, a.vv * x} ;}
+pii operator%(pii a,ll x)     {return {a.uu%x, a.vv%x};}
+pii operator+(pii x, pii y) { return {x.uu + y.uu,x.vv + y.vv} ;}
+pii operator-(pii x,pii y) { return {x.uu - y.uu, x.vv - y.vv} ;}
+pii operator*(pii x,pii y) { return {x.uu * y.uu , x.vv * y.vv} ;}
+pii operator%(pii x,pii y) { return {x.uu % y.uu, x.vv % y.vv} ;}
+
+const pii base = {103,101};
+
+const pii  mod = {1000000021, 1e9 + 9 };
+
+int n , m , test , pal ;
+
+string s ;
+
+vector<int>adj[N] ;
+
+pii fh[N],bh[N],power[N];
+
+void dfs(int nd,int pa)
+{
+     fh[nd]=(fh[pa]+power[pa]*s[nd-1])%mod;
+     bh[nd]=(bh[pa]*base+s[nd-1])%mod;
+     power[nd]=(base*power[pa])%mod;
+
+    if(fh[nd]==bh[nd]){
+        ++pal ;
+    }
+
+    for(int ch:adj[nd])
+    {
+        if(ch==pa)
+            continue ;
+
+        dfs(ch,nd) ;
+    }
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>test ;
+
+    for(int tt=1;tt<=test;++tt)
+    {
+        cin>>n>>s ;
+
+        pal=0 ;
+
+        fh[0]={0,0};
+        bh[0]={0,0};
+        power[0]={1,1};
+
+        for(int i=1;i<n;++i)
+        {
+            int u , v ;
+            cin>>u>>v ;
+            adj[u].PB(v) ;
+            adj[v].PB(u) ;
+        }
+
+        dfs(1,0) ;
+
+        int P=pal , Q=n , g=__gcd(P,Q) ;
+
+        P/=g ;
+
+        Q/=g ;
+
+        // 2cout<<" pal "<<pal<<endl ;
+
+        cout<<"Case "<<tt<<": "<<P<<"/"<<Q<<endl ;
+
+        for(int i=0;i<=n+2;++i)
+            adj[i].clear() ;
+
+    }
+
+    return 0 ;
+}
