@@ -110,3 +110,418 @@ int32_t main()
 
     return 0 ;
 }
+
+
+////  ac code of facebook hackercup 
+/// double hash from shefin vai with  single mod 
+
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<cstring>
+#include<bitset>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#include<iterator>
+#include<climits>
+#include<functional>
+#include<iomanip>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   ALL(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   ll             long long
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int test , a[N] , b[N] ;
+
+int n , m , k , one , two ;
+
+const ll MAX_N = 1e6+10, mod = 2e9+63, base1 = 1e9+21, base2 = 1e9+181;
+int s[MAX_N];  // 1-indexed
+ll pw1[MAX_N], pw2[MAX_N], slen;
+
+void pw_calc() {
+    pw1[0] = pw2[0] = 1;
+    for(int i = 1; i < MAX_N; i++) {
+        pw1[i] = (pw1[i-1] * base1) % mod;
+        pw2[i] = (pw2[i-1] * base2) % mod;
+    }
+}
+
+struct Hash {
+    ll h1[MAX_N], h2[MAX_N];
+
+    void init() {
+        h1[0] = h2[0] = 0;
+        for(int i = 1; i <= slen; i++) {
+            h1[i] = (h1[i-1] * base1 + s[i]) % mod;
+            h2[i] = (h2[i-1] * base2 + s[i]) % mod;
+        }
+    }
+
+    inline ll hashVal(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod;
+        if(hsh1 < 0) hsh1 += mod;
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod;
+        if(hsh2 < 0) hsh2 += mod;
+        return (hsh1 << 32) | hsh2;
+    }
+
+    inline ll hashOne(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod;
+        if(hsh1 < 0) hsh1 += mod;
+        return hsh1;
+    }
+
+    inline ll hashTwo(int l, int r) {
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod;
+        if(hsh2 < 0) hsh2 += mod;
+        return hsh2;
+    }
+} fw;
+
+int32_t main()
+{
+    IOS
+
+    pw_calc() ;
+
+    fstream Input, Output ;
+
+    Input.open("E:/online judge/Facebook/input.txt", ios::in);
+
+    if (!Input)
+    {
+        cout << "No such file" ;
+    }
+
+    Output.open("E:/online judge/Facebook/output.txt", ios::out) ;
+
+    Input>>test ;
+
+    for(int tt=1;tt<=test;++tt)
+    {
+         int n , k ;
+
+         Input>>n>>k ;
+
+         for(int i=0;i<=2*n+5;++i)
+            a[i]=b[i]=0 ;
+
+         for(int i=1;i<=n;++i)
+            Input>>a[i] ;
+
+         for(int i=1;i<=n;++i)
+            Input>>b[i] ;
+
+         for(int i=n+1;i<=2*n;++i)
+            a[i]=a[i-n] , b[i]=b[i-n] ;
+
+         for(int i=1;i<=n;++i)
+            s[i]=b[i] ;
+
+         slen=n ;
+
+         fw.init() ;
+
+         int hv = fw.hashVal(1,n) ;
+
+         for(int i=1;i<=2*n;++i)
+            s[i]=a[i] ;
+
+         slen=2*n ;
+
+         fw.init() ;
+
+         bool pos=false ;
+
+         for(int i=1;i<=n;++i)
+         {
+             if(fw.hashVal(i,i+n-1)==hv)
+                pos=true ;
+         }
+
+         if(!pos)
+         {
+             Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+             continue ;
+         }
+
+         bool equ=true ;
+
+         for(int i=1;i<=n;++i)
+            if(a[i]!=b[i])
+               equ=false ;
+
+
+         if(n==2)
+         {
+             if(equ and k%2==0)
+                Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else if(equ==false and k%2==1)
+                Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else
+                Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+
+             continue ;
+         }
+
+         if(k>0)
+         {
+             if(k==1 and equ)
+                 Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+             else
+                 Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+         }
+         else
+         {
+             if(equ)
+                 Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else
+                 Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+         }
+
+    }
+
+    Input.close() ;
+
+    Output.close() ;
+/**/
+    return 0 ;
+}
+
+
+///  ac code of facebook hackercup 
+///  double hash with double mod
+
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<cstring>
+#include<bitset>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#include<iterator>
+#include<climits>
+#include<functional>
+#include<iomanip>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   ALL(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   ll             long long
+#define   pii            pair<int,int>
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int test , a[N] , b[N] ;
+
+int n , m , k , one , two ;
+
+const ll MAX_N = 1e6+10, mod1 = 2e9+63, mod2 = MOD , base1 = 1e9+21, base2 = 1e9+181;
+int s[MAX_N];  // 1-indexed
+ll pw1[MAX_N], pw2[MAX_N], slen;
+
+void pw_calc() {
+    pw1[0] = pw2[0] = 1;
+    for(int i = 1; i < MAX_N; i++) {
+        pw1[i] = (pw1[i-1] * base1) % mod1;
+        pw2[i] = (pw2[i-1] * base2) % mod2;
+    }
+}
+
+struct Hash {
+    ll h1[MAX_N], h2[MAX_N];
+
+    void init() {
+        h1[0] = h2[0] = 0;
+        for(int i = 1; i <= slen; i++) {
+            h1[i] = (h1[i-1] * base1 + s[i]) % mod1;
+            h2[i] = (h2[i-1] * base2 + s[i]) % mod2;
+        }
+    }
+
+    inline pii hashVal(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod1;
+        if(hsh1 < 0) hsh1 += mod1;
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod2;
+        if(hsh2 < 0) hsh2 += mod2;
+        return {hsh1,hsh2};
+    }
+
+    inline ll hashOne(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod1;
+        if(hsh1 < 0) hsh1 += mod1;
+        return hsh1;
+    }
+
+    inline ll hashTwo(int l, int r) {
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod2;
+        if(hsh2 < 0) hsh2 += mod2;
+        return hsh2;
+    }
+} fw;
+
+bool same(pii a,pii b)
+{
+    return a.first==b.first and a.second==b.second ;
+}
+
+int32_t main()
+{
+    IOS
+
+    pw_calc() ;
+
+    fstream Input, Output ;
+
+    Input.open("E:/online judge/Facebook/input.txt", ios::in);
+
+    if (!Input)
+    {
+        cout << "No such file" ;
+    }
+
+    Output.open("E:/online judge/Facebook/output.txt", ios::out) ;
+
+    Input>>test ;
+
+    for(int tt=1;tt<=test;++tt)
+    {
+         int n , k ;
+
+         Input>>n>>k ;
+
+         for(int i=0;i<=2*n+5;++i)
+            a[i]=b[i]=0 ;
+
+         for(int i=1;i<=n;++i)
+            Input>>a[i] ;
+
+         for(int i=1;i<=n;++i)
+            Input>>b[i] ;
+
+         for(int i=n+1;i<=2*n;++i)
+            a[i]=a[i-n] , b[i]=b[i-n] ;
+
+         for(int i=1;i<=n;++i)
+            s[i]=b[i] ;
+
+         slen=n ;
+
+         fw.init() ;
+
+         pii hv = fw.hashVal(1,n) ;
+
+         for(int i=1;i<=2*n;++i)
+            s[i]=a[i] ;
+
+         slen=2*n ;
+
+         fw.init() ;
+
+         bool pos=false ;
+
+         for(int i=1;i<=n;++i)
+         {
+             if(same(fw.hashVal(i,i+n-1),hv))
+                pos=true ;
+         }
+
+         if(!pos)
+         {
+             Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+             continue ;
+         }
+
+         bool equ=true ;
+
+         for(int i=1;i<=n;++i)
+            if(a[i]!=b[i])
+               equ=false ;
+
+         bool alleq=true ;
+
+         if(!equ)
+            alleq=false ;
+
+         for(int i=1;i<n;++i)
+            if(a[i]!=a[i+1])
+              alleq=false ;
+
+         if(alleq)
+         {
+             Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             continue ;
+         }
+
+         if(n==2)
+         {
+             if(equ and k%2==0)
+                Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else if(equ==false and k%2==1)
+                Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else
+                Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+
+             continue ;
+         }
+
+         if(k>0)
+         {
+             if(k==1 and equ)
+                 Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+             else
+                 Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+         }
+         else
+         {
+             if(equ)
+                 Output<<"Case #"<<tt<<": "<<"YES"<<endl ;
+             else
+                 Output<<"Case #"<<tt<<": "<<"NO"<<endl ;
+         }
+
+    }
+
+    Input.close() ;
+
+    Output.close() ;
+/**/
+    return 0 ;
+}
+
+
+
