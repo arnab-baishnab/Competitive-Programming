@@ -1,0 +1,29 @@
+/// segtree with lazy propagation ...
+
+void build(int nd,int be,int en) ;
+void update(int nd,int be,int en,int l,int r,int v) ;
+int query(int nd,int be,int en,int l,int r) ;
+void lazy(int nd,int be,int en){
+    if(prop[nd]==0)return ; tree[nd]+=prop[nd] ;
+    if((nd<<1)<4*N)prop[nd<<1]+=prop[nd] ; if((nd<<1|1)<4*N)prop[nd<<1|1]+=prop[nd] ; prop[nd]=0 ;
+}
+void build(int nd,int be,int en){
+    prop[nd]=0 ;
+    if(be==en){tree[nd]=a[be];return;}
+    int md=(be+en)/2 ; build(nd<<1,be,md) ;  build(nd<<1|1,md+1,en) ;
+    tree[nd]=tree[nd<<1]+tree[nd<<1|1] ;
+}
+void update(int nd,int be,int en,int l,int r,int v){
+    lazy(nd,be,en) ;  if(be>r or en<l)return ;
+    if(be>=l and en<=r){
+        prop[nd]=v ; lazy(nd,be,en) ; return ;
+    }
+    int md=(be+en)>>1 ; update(nd<<1,be,md,l,r,v) ; update(nd<<1|1,md+1,en,l,r,v) ;
+    tree[nd]=min(tree[nd<<1],tree[nd<<1|1]) ;
+}
+int query(int nd,int be,int en,int l,int r){
+    lazy(nd,be,en) ;  if(be>r or en<l)return INF ; if(be>=l and en<=r)return tree[nd] ;
+    int md=(be+en)>>1 , p ,q ;
+    p=query(nd<<1,be,md,l,r) ; q=query(nd<<1|1,md+1,en,l,r) ;
+    tree[nd]=min(tree[nd<<1],tree[nd<<1|1]) ; return min(p,q) ;
+}
