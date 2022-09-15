@@ -48,3 +48,26 @@ int main(){
  
     rp=rp/n ;
 }
+
+///**** anachor 
+
+PT ProjectPointLine(PT a, PT b, PT c) {
+  return a + (b-a)*dot(c-a, b-a)/dot(b-a, b-a);
+}
+ 
+// project point c onto line segment through a and b
+PT ProjectPointSegment(PT a, PT b, PT c) {
+  double r = dot(b-a,b-a);
+  if (fabs(r) < EPS) return a;
+  r = dot(c-a, b-a)/r;
+  if (r < 0) return a;
+  if (r > 1) return b;
+  return a + (b-a)*r;
+}
+ 
+// compute distance from c to segment between a and b
+double DistancePointSegment(PT a, PT b, PT c) {
+  return sqrt(dist2(c, ProjectPointSegment(a, b, c)));
+}
+
+/***/
