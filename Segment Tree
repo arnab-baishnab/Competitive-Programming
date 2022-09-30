@@ -17,7 +17,7 @@ void build(int nd,int be,int en){
 void update(int nd,int be,int en,int l,int r,int v){
     propagate(nd,be,en) ;  if(be>r or en<l)return ;
     if(be>=l and en<=r){
-        prop[nd]=v ; lazy(nd,be,en) ; return ;
+        prop[nd]=v ; propagate(nd,be,en) ; return ;
     }
     int md=(be+en)>>1 ; update(nd<<1,be,md,l,r,v) ; update(nd<<1|1,md+1,en,l,r,v) ;
     tree[nd]=min(tree[nd<<1],tree[nd<<1|1]) ;
