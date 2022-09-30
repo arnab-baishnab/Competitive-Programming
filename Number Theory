@@ -1,0 +1,20 @@
+/// Euler totient phi . Given n . Calculates number of coprimes <=n . 
+
+void Totient_Phi()
+{
+    for(int i=1;i<N;++i)
+    {
+        phi[i]=i ;
+    }
+    for(int i=2;i<N;++i)
+    {
+        if(chk[i]==0) /// prime
+        {
+            for(int j=i;j<N;j+=i)
+            {
+               phi[j]=(a[j]/i)*(i-1) ;
+               chk[j]=1 ;
+            }
+        }
+    }
+}
