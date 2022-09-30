@@ -1,0 +1,45 @@
+/// Fully trusted code , implemented by me . 
+
+int extended_euclid(LL a,LL b,LL &x,LL &y){
+    if(b==0)
+    {
+        x=1;
+        y=0;
+        return a ;
+    }
+    /**
+    gcd = x*b + y*(a%b) ;
+
+    gcd = x*b + y*(a-(a/b)*b) ;
+
+    gcd = x*b + y*a - y*(a/b)*b ;
+
+    gcd = y*a + (x-(y*(a/b)))*b ;
+    /**/
+
+    LL temp , g ;
+    g=extended_euclid(b,a%b,x,y);
+    temp=x-y*(a/b) , x=y , y=temp ;
+    return g ;
+}
+
+LL inverse_mod(LL C){
+    LL x,y;
+    extended_euclid(MOD,C,x,y);
+    return ((y%MOD)+MOD)%MOD;
+}
+
+int mod_expo(int a,int b){
+    if(b==0)
+        return 1 ;
+    int x=mod_expo(a,b>>1) ;
+    x=x*x%MOD ; if(b&1)x=x*a%MOD ; return x ;
+}
+
+LL ncr(LL n,LL r){
+    if(r>n)
+        return 0 ;
+    r=Fact[r]*Fact[n-r]%MOD;
+    return Fact[n]*inverse_mod(r)%MOD;
+    /// ncr calculate using triangle formula nCr = (n-1)Cr + (n-1)C(r-1) ;
+}
