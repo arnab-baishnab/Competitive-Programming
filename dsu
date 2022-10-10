@@ -1,0 +1,9 @@
+int Find_Parent(int node){
+    if(p[node]==node)
+        return node ;
+    return p[node]=Find_Parent(p[node]) ;
+}
+
+void Union(int u,int v){
+    p[Find_Parent(u)]=Find_Parent(v) ;
+}
