@@ -1,0 +1,5 @@
+1 . swap between set , vector , multiset is constant complexity . This is just pointer swap . 
+     https://www.geeksforgeeks.org/multisetswap-c-stl/
+     https://stackoverflow.com/questions/40948838/complexity-of-swapping-two-rows-in-vector-and-array-using-swap-function
+     https://www.geeksforgeeks.org/setswap-c-stl/
+     
