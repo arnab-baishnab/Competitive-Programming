@@ -1,0 +1,25 @@
+fill(d,d+n+2,oo) ;
+
+    d[n]=0 ;
+
+    priority_queue<pii>Q ;
+
+    Q.push({0,n}) ;
+
+    while(Q.size())
+    {
+        int v = Q.top().second ;
+        Q.pop() ;
+        if(mark[v])
+            continue ;
+        mark[v]=true ;
+        for(int u:adj[v])
+        {
+            if(d[u]>t[u]+d[v])
+            {
+                d[u] = t[u] + d[v] ;
+                Q.push({-d[u],u}) ;
+            }
+            --t[u] ; 
+        }
+    }
