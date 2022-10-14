@@ -1,0 +1,35 @@
+
+trie used to solve https://codeforces.com/contest/842/problem/D ; https://codeforces.com/problemset/problem/282/E ;
+
+struct node{
+    node *ch[2] ;
+    int cnt ;
+    node()
+    {
+        ch[0]=ch[1]=NULL, cnt=0 ;
+    }
+}*root ;
+
+void insert(int x){
+    node *curr=root ;
+    for(int i=20,bit; i>=0; --i){
+        bit=(x>>i)&1 ;
+        if(curr->ch[bit]==NULL)
+            curr->ch[bit]=new node() ;
+        curr=curr->ch[bit], curr->cnt++ ;
+    }
+}
+
+int mex(int x){
+    node *curr=root ; int num=0 ;
+    for(int i=20,bit; i>=0; --i){
+        bit=(x>>i)&1 ;
+        if(curr->ch[bit]!=NULL and curr->ch[bit]->cnt==(1<<i))
+            curr=curr->ch[bit^1] , num^=(1<<i) ;
+        else
+            curr=curr->ch[bit] ;
+        if(curr==NULL)
+            return num ;
+    }
+    return num ;
+}
