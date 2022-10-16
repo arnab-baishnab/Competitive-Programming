@@ -43,3 +43,15 @@ LL ncr(LL n,LL r){
     return Fact[n]*inverse_mod(r)%MOD;
     /// ncr calculate using triangle formula nCr = (n-1)Cr + (n-1)C(r-1) ;
 }
+
+void Stirling_Number()
+{
+    s[0][0]=1 ;
+    for(int i=1;i<=2000;++i)
+    {
+        for(int j=1;j<=2000;++j)
+        {
+            s[i][j] = ( s[i-1][j-1] + j*s[i-1][j] ) % MOD ;
+        }
+    }
+}
