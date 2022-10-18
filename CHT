@@ -88,3 +88,68 @@ struct CHT {
         return func(ptr,x);
     }
 };
+
+/// my ac code for minimum query ... 
+
+struct line
+{
+    int m, c ;
+    line() {}
+    line(int m,int c)
+    {
+        this->m=m ;
+        this->c=c ;
+    }
+    int f(int x)
+    {
+        return x*m+c ;
+    }
+} tree[4*N] ;
+ 
+void insert(line seg,int nd=1,int l=0,int r=n)
+{
+    if(l>=r)
+    {
+        return ;
+    }
+    if(l+1==r)
+    {
+        if(tree[nd].f(l)>seg.f(l))
+        {
+            tree[nd]=seg ;
+        }
+        return ;
+    }
+    int md=(l+r)/2 ;
+    if(seg.f(md)<tree[nd].f(md))
+    {
+        swap(tree[nd],seg) ;
+    }
+    if(seg.f(l)<tree[nd].f(l))
+    {
+        insert(seg,nd*2,l,md) ;
+    }
+    else
+    {
+        insert(seg,nd*2+1,md+1,r) ;
+    }
+}
+ 
+int query(int x,int nd=1,int l=0,int r=n)
+{
+    if(l+1==r)
+    {
+        return tree[nd].f(x) ;
+    }
+    int md=(l+r)/2, q1, q2=oo ;
+    q1 = tree[nd].f(x) ;
+    if(x<md)
+    {
+        q2 = query(x,nd*2,l,md) ;
+    }
+    else if(x>md)
+    {
+        q2 = query(x,nd*2+1,md+1,r) ;
+    }
+    return min(q1,q2) ;
+}
