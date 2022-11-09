@@ -19,7 +19,7 @@ void Totient_Phi()
     }
 }
 
-int inclusion_exlcution (int n, int r) {
+int inclusion_exlcusion (int n, int r) {
     vector<int> p;
     for (int i=2; i*i<=n; ++i)
         if (n % i == 0) {
