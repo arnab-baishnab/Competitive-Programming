@@ -19,6 +19,7 @@ void Totient_Phi()
     }
 }
 
+//// gives number of coprime from ( 1 to r ) w.r.t n 
 int inclusion_exlcusion (int n, int r) {
     vector<int> p;
     for (int i=2; i*i<=n; ++i)
