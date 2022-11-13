@@ -1,0 +1,100 @@
+/// policy based data structures 
+
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+using namespace __gnu_pbds;
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int oo=1LL*1000*1000*1000*1000*1000*1000+7LL ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int test, n, a[N], k ;
+
+/*
+typedef tree<int, null_type,  less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
+ordered_multiset omset ;
+int value = *omset.find_by_order(k) ;
+omset.erase(omset.find_by_order(omset.order_of_key(value))) ;
+/**/
+
+
+int32_t main()
+{
+    IOS
+
+    cin>>test ;
+
+    while(test--)
+    {
+        cin>>n>>k ;
+
+        ordered_multiset omset ;
+
+        omset.insert(oo) ;
+        omset.insert(oo) ;
+        omset.insert(oo) ;
+        omset.insert(oo) ;
+
+        for(int i=1; i<=n; ++i)
+        {
+            cin>>a[i] ;
+            omset.insert(a[i]) ;
+        }
+
+        int ans=-oo ;
+
+        for(int i=1; i<n; ++i)
+        {
+            int Min = min(a[i],a[i+1]), Max = max(a[i],a[i+1]), vk ;
+
+            omset.erase(omset.find_by_order(omset.order_of_key(Min))) ;
+
+            omset.erase(omset.find_by_order(omset.order_of_key(Max))) ;
+
+            vk = *omset.find_by_order(k) ;
+
+            ans=max(ans,min(Min,2LL*vk)) ;
+
+            vk = *omset.find_by_order(k-1) ;
+
+            ans=max(ans,min(Max,2LL*vk)) ;
+
+            if(k>=2)
+            {
+                vk = *omset.find_by_order(max(0LL,k-2)) ;
+                ans=max(ans,2LL*vk) ;
+            }
+
+            omset.insert(Min) ;
+
+            omset.insert(Max) ;
+        }
+
+        ans=min(ans,1LL*1000*1000*1000) ;
+
+        cout<<ans<<endl ;
+
+    }
+
+    /**/
+
+    return 0 ;
+}
