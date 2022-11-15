@@ -58,3 +58,9 @@ void Stirling_Number()
 
 lucas theorem . 
 https://brilliant.org/wiki/lucas-theorem/
+
+nice property of ncr 
+https://codeforces.com/problemset/problem/1717/D
+for(int i=1;i<=k;++i)
+s+=ncr(n,i) ; 
+
