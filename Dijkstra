@@ -1,25 +1,26 @@
-fill(d,d+n+2,oo) ;
 
-    d[n]=0 ;
+vector<array<int,3>>adj[N] ;
 
+int dijkstra()
+{
+    vector<bool>mark(n+1,0) ;
+    fill(d,d+n+2,oo) ;
+    d[1]=0 ;
     priority_queue<pii>Q ;
-
-    Q.push({0,n}) ;
-
+    Q.push({0,1}) ;
     while(Q.size())
     {
         int v = Q.top().second ;
         Q.pop() ;
-        if(mark[v])
-            continue ;
-        mark[v]=true ;
-        for(int u:adj[v])
+        if(mark[v])continue ;
+        mark[v]=1 ;
+        for(auto [u,w,t]:adj[v])
         {
-            if(d[u]>t[u]+d[v])
+            if(d[u]>w+d[v])
             {
-                d[u] = t[u] + d[v] ;
+                d[u] = w + d[v] ;
                 Q.push({-d[u],u}) ;
             }
-            --t[u] ; 
         }
     }
+}
