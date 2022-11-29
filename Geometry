@@ -177,3 +177,70 @@ double Area(vector<pdd>pts)
 
    a=a*.5 ; return abs(a) ;
 }
+
+https://codeforces.com/problemset/problem/406/D /// convex hull graham scan + lca used  
+
+int n, m, stk[N], d[N], anc[N][20] ;
+
+pii pt[N] ;
+
+int area(pii a ,pii b, pii c)
+{
+    return a.x*b.y+b.x*c.y+c.x*a.y-a.y*b.x-b.y*c.x-c.y*a.x ;
+}
+
+int lca(int u,int v)
+{
+    //cout<<" u "<<u<<" v "<<v<<endl ;
+    if(d[u]<d[v])
+        swap(u,v) ;
+    for(int j=19;j>=0 and d[u]>d[v] ;--j)  /// u niche ...
+    {
+        if(anc[u][j]==0)continue ;
+        if(d[anc[u][j]]>=d[v])
+            u=anc[u][j] ;
+    }
+    //cout<<" same level "<<u<<" "<<v<<endl ;
+    for(int j=19;j>=0 and u!=v; --j)
+    {
+        if(anc[u][j]!=anc[v][j])
+            u=anc[u][j], v=anc[v][j] ;
+        u=anc[u][0], v=anc[v][0] ;
+    }
+    return u ;
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>n ;
+
+    for(int i=1; i<=n; ++i)
+    {
+        cin>>pt[i].x>>pt[i].y ;
+    }
+
+    anc[0][n]=0 ;
+
+    int top = 0 ;
+
+    for(int i=n; i>=1; --i)
+    {
+        while(top>=2 and area(pt[i],pt[stk[top]],pt[stk[top-1]])>0)--top ;
+
+        if(top)
+        {
+            anc[i][0]=stk[top] ;
+            //cout<<" i "<<i<<" top "<<stk[top]<<endl ;
+            d[i]=d[stk[top]]+1 ;
+            for(int j=1,md; j<20; ++j)
+            {
+                md = anc[i][j-1] ;
+                anc[i][j] = anc[md][j-1] ;
+            }
+        }
+
+        stk[++top]=i ;
+    }
+
