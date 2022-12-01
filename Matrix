@@ -1,0 +1,170 @@
+#include<bits/stdc++.h>
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <time.h>
+#include <map>
+#include <set>
+#include <deque>
+#include <cstdio>
+#include <cstdlib>
+#include <unordered_map>
+#include <bitset>
+#include <algorithm>
+#include <string>
+#include <fstream>
+#include <assert.h>
+#include <list>
+#include <cstring>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ll             long long
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=101 ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int n, x, dp[105], cnt[105] ;
+
+int sum(ll x, ll y)
+{
+    x += y;
+    if (x >= MOD)
+        return x - MOD;
+    return x;
+}
+int mult(ll x, ll y)
+{
+    x%=MOD ;
+    y%=MOD ;
+    return (x * y) % MOD;
+}
+
+struct Matrix
+{
+    ll a[N+1][N+1];
+    Matrix()
+    {
+        for (int i = 1; i <=N; i++)
+            for (int j = 1; j <=N; j++)
+                a[i][j] = 0;
+    }
+    Matrix operator * (const Matrix &X) const
+    {
+        Matrix res;
+        for (int i = 1; i <= N; i++)
+            for (int j = 1; j <= N; j++)
+            {
+                res.a[i][j] = 0;
+                for (int h = 1; h <=N; h++)
+                {
+                    res.a[i][j] = sum(res.a[i][j], mult(a[i][h], X.a[h][j]));
+                }
+            }
+        return res;
+    }
+};
+
+Matrix bin_pow(Matrix x, ll pow)
+{
+    if (pow == 1) return x;
+    if (pow == 2) return x * x;
+    if (pow & 1) return x * bin_pow(x, pow - 1);
+    return bin_pow(bin_pow(x, pow / 2), 2);
+}
+
+Matrix generate()
+{
+    Matrix A;
+
+    for(int i=2;i<=100;++i)
+        A.a[i][i-1]=1 ;
+
+    for(int i=1;i<=100;++i)
+        A.a[i][100]=A.a[i][101]=cnt[100-i+1] ;
+
+    A.a[101][101]=1 ;
+
+    return A;
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>n>>x ;
+
+    for(int i=1,v; i<=n; ++i)
+    {
+        cin>>v ;
+        cnt[v]++ ;
+    }
+
+    dp[0]=1 ;
+
+    for(int i=1;i<=min(100,x);++i)
+    {
+        for(int j=1;j<=i;++j)
+        {
+            dp[i]+=mult(cnt[j],dp[i-j]) ;
+            dp[i]%=MOD ;
+        }
+    }
+
+    if(x<=100)
+    {
+        int res = 0 ;
+        for(int i=0;i<=100;++i)
+        {
+            res+=dp[i] ;
+            res%=MOD;
+        }
+         cout<<res<<endl ;
+        return 0 ;
+    }
+
+    Matrix m=generate() ;
+
+    m=bin_pow(m,x-100) ;
+
+    int ans = 0 ;
+
+    vector<int>A ;
+
+    A.push_back(-1) ;
+
+    for(int i=1,s=1;i<=101;++i)
+    {
+        if(i<101)
+            A.push_back(dp[i]) ;
+        else
+            A.push_back(s) ;
+        s=sum(s,dp[i]) ;
+    }
+
+    for(int i=1;i<=101;++i)
+    {
+        ans = sum(ans,mult(m.a[i][101],A[i])) ;
+    }
+
+    cout<<ans<<endl ;
+
+    return 0 ;
+}
+/*
+practice problems : 
+https://codeforces.com/problemset/problem/514/E
+/**/
