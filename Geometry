@@ -34,121 +34,6 @@ struct line
     }
 };
 
-/// closest pair points 
-/// https://codeforces.com/problemset/problem/429/D
-
-#include<bits/stdc++.h>
-using namespace std;
-#define   MP             make_pair
-#define   PB             push_back
-#define   nn             '\n'
-#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
-#define   ClearVec(vec)  while(vec.size())vec.pop_back()
-#define   ALL(vec)       vec.begin(),vec.end()
-#define   int            long long
-
-typedef long long LL ;
-
-const int MOD=1e9+7,Base=998244353 ;
-const int N=1e6+7 ;
-const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
-const double pie=acos(-1.0) ;
-const double EPS=1e-9 ;
-
-int n, a[N] ;
-
-pair<int,int>p[N] ;
-
-int sq(int x)
-{
-    return x*x ; 
-}
-
-int dist(int i,int j){
-    return (p[i].first-p[j].first)*(p[i].first-p[j].first)+(p[i].second-p[j].second)*(p[i].second-p[j].second) ;
-}
-
-int Dist(pair<int,int>a,pair<int,int>b)
-{
-    return (a.first-b.first)*(a.first-b.first)+(a.second-b.second)*(a.second-b.second) ;
-}
-
-bool cmpx(pair<int,int>a,pair<int,int>b)
-{
-    if(a.first==b.first)
-        return a.second<b.second ;
-
-    return a.first<b.first ;
-}
-
-bool cmpy(pair<int,int>a,pair<int,int>b)
-{
-    if(a.second==b.second)
-        return a.first<b.first ;
-
-    return a.second<b.second ;
-}
-
-int Closest_Pair(int low,int high)
-{
-    if(high-low<=5)
-    {
-        int Min=INF ;
-
-        for(int i=low;i<=high;++i)
-        for(int j=i+1;j<=high;++j)
-        Min=min(Min,dist(i,j)) ;
-
-        return Min ;
-    }
-
-    int mid=(high+low)>>1 , d ;
-
-    d=min(Closest_Pair(low,mid),Closest_Pair(mid+1,high)) ;
-
-    vector<pair<int,int>>vec ;
-
-    for(int i=low;i<=high;++i)
-    {
-        if(sq(p[i].first-p[mid].first)<=d)
-        {
-            vec.PB(p[i]) ;
-        }
-    }
-
-    sort(ALL(vec),cmpy) ;
-
-    for(int i=0;i<vec.size();++i)
-    {
-        for(int j=i+1;j<=i+7 and j<vec.size();++j)
-        {
-           d=min(Dist(vec[i],vec[j]),d) ;
-        }
-    }
-
-    return d ;
-}
-
-int32_t main()
-{
-    IOS ;
-
-    cin>>n ;
-
-    for(int i=1 , sum=0 ; i<=n; ++i)
-        cin>>a[i] , sum+=a[i] , p[i]={i,sum} ;
-
-    sort(p+1,p+n+1,cmpx) ;
-
-    cout<<Closest_Pair(1,n) ;
-
-    return 0;
-}
-
-
-
-
 pdd LineLineIntersection(line A, line B){
     /// Line AB represented as a1x + b1y = c1
     double a1 = A.a ;
@@ -359,3 +244,116 @@ int32_t main()
         stk[++top]=i ;
     }
 
+
+
+/// closest pair points 
+/// https://codeforces.com/problemset/problem/429/D
+
+#include<bits/stdc++.h>
+using namespace std;
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   ClearVec(vec)  while(vec.size())vec.pop_back()
+#define   ALL(vec)       vec.begin(),vec.end()
+#define   int            long long
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int n, a[N] ;
+
+pair<int,int>p[N] ;
+
+int sq(int x)
+{
+    return x*x ; 
+}
+
+int dist(int i,int j){
+    return (p[i].first-p[j].first)*(p[i].first-p[j].first)+(p[i].second-p[j].second)*(p[i].second-p[j].second) ;
+}
+
+int Dist(pair<int,int>a,pair<int,int>b)
+{
+    return (a.first-b.first)*(a.first-b.first)+(a.second-b.second)*(a.second-b.second) ;
+}
+
+bool cmpx(pair<int,int>a,pair<int,int>b)
+{
+    if(a.first==b.first)
+        return a.second<b.second ;
+
+    return a.first<b.first ;
+}
+
+bool cmpy(pair<int,int>a,pair<int,int>b)
+{
+    if(a.second==b.second)
+        return a.first<b.first ;
+
+    return a.second<b.second ;
+}
+
+int Closest_Pair(int low,int high)
+{
+    if(high-low<=5)
+    {
+        int Min=INF ;
+
+        for(int i=low;i<=high;++i)
+        for(int j=i+1;j<=high;++j)
+        Min=min(Min,dist(i,j)) ;
+
+        return Min ;
+    }
+
+    int mid=(high+low)>>1 , d ;
+
+    d=min(Closest_Pair(low,mid),Closest_Pair(mid+1,high)) ;
+
+    vector<pair<int,int>>vec ;
+
+    for(int i=low;i<=high;++i)
+    {
+        if(sq(p[i].first-p[mid].first)<=d)
+        {
+            vec.PB(p[i]) ;
+        }
+    }
+
+    sort(ALL(vec),cmpy) ;
+
+    for(int i=0;i<vec.size();++i)
+    {
+        for(int j=i+1;j<=i+7 and j<vec.size();++j)
+        {
+           d=min(Dist(vec[i],vec[j]),d) ;
+        }
+    }
+
+    return d ;
+}
+
+int32_t main()
+{
+    IOS ;
+
+    cin>>n ;
+
+    for(int i=1 , sum=0 ; i<=n; ++i)
+        cin>>a[i] , sum+=a[i] , p[i]={i,sum} ;
+
+    sort(p+1,p+n+1,cmpx) ;
+
+    cout<<Closest_Pair(1,n) ;
+
+    return 0;
+}
