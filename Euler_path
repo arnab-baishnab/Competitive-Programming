@@ -1,0 +1,118 @@
+https://codeforces.com/contest/508/problem/D
+https://codeforces.com/contest/508/submission/187979809
+(i)   for directed graph . 
+(ii)  count of indeg>outdeg vertex can be at most 2 
+(iii) indeg - outdeg can be at most 1 
+
+/**************************************************************\
+    Arnab Baishnab Nipun , RUET CSE                            }
+    codeforces = arnab_baishnab                                }
+    codechef   = nipun_baishnab                                }
+    atcoder    = Nipunbaishnab                                 }
+    lichess    = arnab_baishnab                                }
+    mail       = arnabbaishnab7620172@gmail.com                }
+    linkedin   = https://www.linkedin.com/in/arnab-baishnab/   }
+    facebook   = https://www.facebook.com/arnob.nipun/         }
+***************************************************************/
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int oo=1LL*1000*1000*1000*1000*1000*1000+0LL ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int n, test, ind[N] ;
+
+vector<int>adj[N], reverse_path ;
+
+void euler_path(int u)
+{
+    while(adj[u].size())
+    {
+        int v = adj[u].back() ;
+        adj[u].pop_back() ;
+        euler_path(v) ;
+    }
+    rereverse_pathse_path.push_back(u) ;
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>n ;
+
+    int c=0, rt = -1 ;
+
+    for(int i=1; i<=n; ++i)
+    {
+        string x ;
+        cin>>x ;
+        int u = (x[0]<<7) | x[1] ;
+        int v = (x[1]<<7) | x[2] ;
+        ind[v]++ ;
+        adj[u].push_back(v) ;
+        rt = u ;
+    }
+
+    for(int i=0; i<(1<<15); ++i)
+    {
+        if(ind[i]!=adj[i].size())
+        {
+            ++c ;
+            if(ind[i]<adj[i].size())
+                rt=i ;
+            if(ind[i]-adj[i].size()>1)
+                c=100 ;
+
+        }
+    }
+
+    if(c>2)
+        cout<<"NO\n", exit(0) ;
+
+    //cout<<(char)(rt/(1<<7))<<(char)(rt%(1<<7))<<endl ;
+
+    euler_path(rt) ;
+
+    if(reverse_path.size()!=n+1)
+        cout<<"NO\n", exit(0) ;
+
+    cout<<"YES\n" ;
+
+    rereverse_pathse(all(reverse_path)) ;
+
+    for(int i=0; i<reverse_path.size(); ++i)
+    {
+        int a = reverse_path[i]/(1<<7), b = reverse_path[i]%(1<<7) ;
+        if(i==reverse_path.size()-1)
+        {
+            cout<<(char)a<<(char)b<<endl ;
+        }
+        else
+        {
+            cout<<(char)a ;
+        }
+    }
+
+    return 0 ;
+}
