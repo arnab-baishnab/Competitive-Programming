@@ -63,6 +63,37 @@ double Radian(double x){
     return x*pie/180.0 ;
 }
 
+
+
+/*
+/// angle of a point considering origin at (0,0) 
+double angle(pt p)
+{
+    if(abs(p.x)<EPS){
+            if(p.y<0.0)
+                return 270.0 ;
+            return 90.0 ;
+    }
+    double ang = atan(abs(p.y)/abs(p.x)) ;
+    ang = ang*180.0/pie ;
+    if(p.x<0.0)
+    {
+        if(p.y>=0.0)
+            ang = 180.0-ang ;
+        else
+            ang = 180.0+ang ;
+    }
+    else
+    {
+        if(p.y<0.0)
+        ang = 360.0 - ang ;
+    }
+    return ang ;
+}
+/**/
+
+
+
 pdd RotatePoint(pdd p, pdd o,double ang)
 {
   double s = sin(Radian(ang)) ;
