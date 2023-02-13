@@ -1,4 +1,18 @@
 
+/*
+priority queue 
+
+struct Data{
+    int idx,v ;
+    friend bool operator <(const Data& a,const Data& b){
+        if(a.v==b.v)
+            return a.idx>b.idx ;  /// priority queue returns opposite . ...
+        else
+            return a.v>b.v ;
+    }
+}obj;
+/**/
+
 vector<array<int,3>>adj[N] ;
 
 int dijkstra()
