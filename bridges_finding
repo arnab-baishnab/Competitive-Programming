@@ -1,0 +1,73 @@
+/// offline 
+/// https://lightoj.com/problem/critical-links
+
+int n , test , in[N] , low[N] , t , vis[N] ;
+
+vector<int>adj[N] ;
+
+vector<pii>bridges ;
+
+void dfs(int u,int p)
+{
+    vis[u]=1 ;
+    in[u]=low[u]=++t ;
+    for(int v:adj[u])
+    {
+        if(v==p)continue ;
+        else if(vis[v])
+            low[u]=min(low[u],low[v]) ;
+        else
+        {
+            dfs(v,u) ;
+            if(low[v]>in[u]) /// bridge
+            {
+                int x = v , y = u ;
+                if(x>y)swap(x,y) ;
+                bridges.PB({x,y}) ;
+            }
+            low[u]=min(low[u],low[v]) ;
+        }
+    }
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>test ;
+
+    for(int tt=1;tt<=test;++tt)
+    {
+        cin>>n ;
+        for(int i=1;i<=n;i++)
+        {
+            int u , t , v ;char ch ;
+            cin>>u>>ch>>t>>ch ;
+            for(int j=1;j<=t;++j)
+            {
+                cin>>v ;
+                adj[u].PB(v) ;
+            }
+        }
+        for(int i=0;i<n;i++)
+        {
+            if(!vis[i])
+                dfs(i,-1) ;
+        }
+        cout<<"Case "<<tt<<":\n"<<bridges.size()<<" critical links\n" ;
+        sort(all(bridges)) ;
+        for(auto [u,v]:bridges)
+        {
+            cout<<u<<" - "<<v<<endl ;
+        }
+        for(int i=0;i<=n;i++)
+        {
+            adj[i].clear() ;
+            vis[i]=0 ;
+        }
+        bridges.clear() ;
+        t = 0 ;
+    }
+
+    return 0 ;
+}
