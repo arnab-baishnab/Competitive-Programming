@@ -39,6 +39,10 @@ int mod_expo(int a,int b){
 LL ncr(LL n,LL r){
     if(r>n)
         return 0 ;
+    if(Fact[0]==0)
+    {
+        Fact[0]=1 ; for(int i=1;i<N;i++)Fact[i]=Fact[i-1]*i%MOD ; 
+    }
     r=Fact[r]*Fact[n-r]%MOD;
     return Fact[n]*inverse_mod(r)%MOD;
     /// ncr calculate using triangle formula nCr = (n-1)Cr + (n-1)C(r-1) ;
