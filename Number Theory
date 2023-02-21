@@ -51,7 +51,8 @@ int inclusion_exlcusion (int n, int r) {
     return r - sum;
 }
 
-/// mobius function  
+/// mobius function ... fun fact till now i was doing it by iterating over all divisors in nlogn but mobius can do it in every query O(n) .  
+/// given a grid of size n*m .. count number of pairs such that they have a unique gcd ... ( solve lightoj ray gun ) ,, 
 
  fill(pr,pr+N,1) ; fill(mob,mob+N,1) ;
 
@@ -71,8 +72,6 @@ int inclusion_exlcusion (int n, int r) {
             }
         }
     }
-    
-    /// given a grid of size n*m .. count number of pairs such that they have a unique gcd ... ( solve lightoj ray gun )
     
     for(int g=1;g<=n;++g)
     {
