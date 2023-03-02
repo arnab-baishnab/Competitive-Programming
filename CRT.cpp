@@ -47,7 +47,8 @@ int32_t main() {
     Assumptions:
         1. LCM of all mods will fit into long long.
 */
-class ChineseRemainderTheorem {
+class ChineseRemainderTheorem
+{
     typedef long long vlong;
     typedef pair<vlong,vlong> pll;
 
@@ -55,15 +56,42 @@ class ChineseRemainderTheorem {
     vector<pll> equations;
 
 public:
-    void clear() {
+    void clear()
+    {
         equations.clear();
     }
 
     /** Add equation of the form x = r (mod m)*/
-    void addEquation( vlong r, vlong m ) {
+    void addEquation( vlong r, vlong m )
+    {
         equations.push_back({r, m});
     }
-    pll solve() {
+    vlong ext_gcd(vlong a,vlong b,vlong &x,vlong &y)
+    {
+        if(b==0)
+        {
+            x=1;
+            y=0;
+            return a ;
+        }
+        /**
+        gcd = x*b + y*(a%b) ;
+
+        gcd = x*b + y*(a-(a/b)*b) ;
+
+        gcd = x*b + y*a - y*(a/b)*b ;
+
+        gcd = y*a + (x-(y*(a/b)))*b ;
+        /**/
+
+        vlong temp, g ;
+        g=ext_gcd(b,a%b,x,y);
+        temp=x-y*(a/b), x=y, y=temp ;
+        return g ;
+    }
+
+    pll solve()
+    {
         if (equations.size() == 0) return {-1,-1}; /// No equations to solve
 
         vlong a1 = equations[0].first;
@@ -72,7 +100,8 @@ public:
         /** Initially x = a_0 (mod m_0)*/
 
         /** Merge the solution with remaining equations */
-        for ( int i = 1; i < equations.size(); i++ ) {
+        for ( int i = 1; i < equations.size(); i++ )
+        {
             vlong a2 = equations[i].first;
             vlong m2 = equations[i].second;
 
@@ -81,7 +110,8 @@ public:
 
             /** Merge the two equations*/
             vlong p, q;
-            ext_gcd(m1/g, m2/g, &p, &q);
+
+            ext_gcd(m1/g, m2/g, p, q);
 
             vlong mod = m1 / g * m2;
             vlong x = ( (__int128)a1 * (m2/g) % mod *q % mod + (__int128)a2 * (m1/g) % mod * p % mod ) % mod;
