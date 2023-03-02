@@ -2,7 +2,31 @@
 /// x = x0 + k*(b/g) ... 
 /// y = y0 - k*(a/g) ... 
 
+/// practice https://lightoj.com/problem/solutions-to-an-equation
 
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#include<bits/stdc++.h>
+using namespace std ;
+#define ll long long
+#define pb push_back
+#define PB push_back
+#define int long long
+#define pii pair<int,int>
+#define ff first
+#define ss second
+#define all(vec) vec.begin() , vec.end()
+#define int long long
+
+typedef long long LL ;
+
+const int N = 1e6+7, oo = 1LL*1000*1000*1000*1000 ;
+
+int test , A , B , C ;
+
+/// gives one solution to a*x + b*x = c type equation ...
+/// x = x0 + k*(b/g) ...
+/// y = y0 - k*(a/g) ...
 
 int gcd(int a, int b, int& x, int& y) {
     if (b == 0) {
@@ -28,4 +52,88 @@ bool find_any_solution(int a, int b, int c, int &x0, int &y0, int &g) {
     if (a < 0) x0 = -x0;
     if (b < 0) y0 = -y0;
     return true;
+}
+
+void shift_solution(int & x, int & y, int a, int b, int cnt) {
+    x += cnt * b;
+    y -= cnt * a;
+}
+
+int find_all_solutions(int a, int b, int c, int minx, int maxx, int miny, int maxy) {
+    int x, y, g;
+    if (!find_any_solution(a, b, c, x, y, g))
+        return 0;
+    a /= g;
+    b /= g;
+
+    int sign_a = a > 0 ? +1 : -1;
+    int sign_b = b > 0 ? +1 : -1;
+
+    shift_solution(x, y, a, b, (minx - x) / b);
+    if (x < minx)
+        shift_solution(x, y, a, b, sign_b);
+    if (x > maxx)
+        return 0;
+    int lx1 = x;
+
+    shift_solution(x, y, a, b, (maxx - x) / b);
+    if (x > maxx)
+        shift_solution(x, y, a, b, -sign_b);
+    int rx1 = x;
+
+    shift_solution(x, y, a, b, -(miny - y) / a);
+    if (y < miny)
+        shift_solution(x, y, a, b, -sign_a);
+    if (y > maxy)
+        return 0;
+    int lx2 = x;
+
+    shift_solution(x, y, a, b, -(maxy - y) / a);
+    if (y > maxy)
+        shift_solution(x, y, a, b, sign_a);
+    int rx2 = x;
+
+    if (lx2 > rx2)
+        swap(lx2, rx2);
+    int lx = max(lx1, lx2);
+    int rx = min(rx1, rx2);
+
+    if (lx > rx)
+        return 0;
+    return (rx - lx) / abs(b) + 1;
+}
+
+int32_t main()
+{
+    ios::sync_with_stdio(0), cin.tie(0) ;
+
+    int x1 , x2 , y1 , y2 , a , b , c ;
+
+    cin>>test ;
+
+    for(int tt=1;tt<=test;++tt)
+    {
+        cin>>a>>b>>c>>x1>>x2>>y1>>y2 ;
+        c=-c ;
+        int x0 , y0 , g ;
+
+        cout<<"Case "<<tt<<": " ;
+
+        if(a==0 && b==0 && c==0) cout<<(x2-x1+1)*(y2-y1+1)<<'\n';   //this is the trivial case 0+0=0 and all numbers in the interval will satisfy the equation
+
+        else if(a==0 && b==0) cout<<0<<'\n';                        //only a and b are 0 => 0=C
+
+        else if(a==0){                                              //only a is 0, By=C
+            if(c%b!=0 || y1>c/b || y2<c/b) cout<<0<<'\n';           //Ans is 0 when y doesn't exist ie. C doesn't divide B; or C does divide B but C/B doesn't fall in the given interval
+            else cout<<(x2-x1+1)<<'\n';                             //if such a y exists in the given interval, then it can be paired with any x in the given interval     }
+        }
+        else if(b==0){                                              //Ax=C, same thing as above.
+            if(c%a!=0 || x1>c/a || x2<c/a) cout<<0<<'\n';
+            else cout<<(y2-y1+1)<<'\n';
+        }
+        else cout<<find_all_solutions(a,b,c,x1,x2,y1,y2)<<endl ;
+    }
+    /**/
+
+    return 0 ;
 }
