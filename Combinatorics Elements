@@ -71,6 +71,8 @@ s+=ncr(n,i) ;
 
 /*catalan number 
 2. 
+applications : https://www.geeksforgeeks.org/applications-of-catalan-numbers/
+
 name : counting perfect bst  
 link : https://lightoj.com/problem/counting-perfect-bst
 description :  given a set of numbers . find how many number of binary search tree possible .
@@ -78,5 +80,7 @@ why  :
 (i)   you need to know what is katalan number . (2n)!/((n+1)!*n!) is it's formula . 
 (ii)  still it was solvable because perfect numbers won't be too much . dp will work . 
 (iii) but if the constraint would be too large we must have to use catalan number . 
+
+
 
 
