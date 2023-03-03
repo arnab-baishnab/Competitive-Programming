@@ -1,0 +1,5 @@
+/*
+problem : https://lightoj.com/problem/the-vindictive-coach 
+here mod value was 2^64 
+using unsigned long long does the task . nothing to modulo 
+/**/ 
