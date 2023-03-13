@@ -1,0 +1,131 @@
+//#pragma GCC optimize("O3,unroll-loops")
+//#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   EB             emplace_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int oo=1LL*1000*1000*1000*1000*1000*1000+7LL ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+bitset<50005>b[50005] ;
+
+int n, test, in[N], low[N], t, vis[N], p[N], m, roots[N] ;
+
+vector<int> adj[N], adj_rev[N] , adj_scc[N] ;
+vector<bool> used ;
+vector<int> order, component , root_nodes ;
+
+void dfs1(int v)
+{
+    used[v] = true;
+    for (auto u : adj[v])
+        if (!used[u])
+            dfs1(u);
+    order.push_back(v);
+}
+
+void dfs2(int v)
+{
+    used[v] = true;
+    component.push_back(v);
+    for (auto u : adj_rev[v])
+        if (!used[u])
+            dfs2(u);
+}
+
+void scc()
+{
+    used.assign(n+5, false);
+    for (int i = 1; i <= n; i++)
+        if (!used[i])
+            dfs1(i);
+    used.assign(n+5, false);
+    reverse(order.begin(), order.end());
+    for (auto v : order)
+        if (!used[v])
+        {
+            dfs2 (v);
+            int root = component.front();
+            for (auto u : component) roots[u] = root;
+            root_nodes.push_back(root);
+            component.clear();
+        }
+    for (int v = 1; v <= n; v++)
+    for (auto u : adj[v]) {
+        int root_v = roots[v],
+            root_u = roots[u];
+        if (root_u != root_v)
+            adj_scc[root_v].push_back(root_u);
+    }
+}
+
+void calc(int u)
+{
+    if(vis[u])return ;
+    b[u].set(u) , vis[u]=1 ;
+    for(int v:adj_scc[u])
+    {
+        calc(v) , b[u]|=b[v] ;
+    }
+}
+
+int32_t main()
+{
+    IOS
+
+    int q, test ;
+
+    cin>>n>>m>>q ;
+
+    for(int i=1; i<=n; i++)
+    {
+        adj[i].clear() , b[i]=b[i]&b[0] , adj_rev[i].clear() ;
+    }
+
+    for(int i=1; i<=m; i++)
+    {
+        int u, v ;
+        cin>>u>>v ;
+        adj[u].PB(v) ;
+        adj_rev[v].PB(u) ;
+    }
+
+    scc() ;
+
+    for(int u:root_nodes)
+    {
+        calc(u) ;
+    }
+
+    while(q--)
+    {
+        int u, v ;
+        cin>>u>>v ;
+        u = roots[u] , v = roots[v] ;
+        cout<<(b[u].test(v)?"YES":"NO")<<endl ;
+    }
+
+    return 0 ;
+}
