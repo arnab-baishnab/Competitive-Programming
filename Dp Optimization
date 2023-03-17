@@ -1,7 +1,8 @@
-/*
-Problem Name: Subarray Squares
-Problem Link: https://cses.fi/problemset/task/2086
-Author: Sachin Srivastava (mrsac7)
+/* 
+Practice Problems : 
+https://cses.fi/problemset/task/2087 
+https://cses.fi/problemset/task/2086
+Author: Srivastava (mrsac7)
 */
 #include<bits/stdc++.h>
 using namespace std;
