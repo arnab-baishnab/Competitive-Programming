@@ -38,6 +38,8 @@ using i64 = long long;
 
 int a[N] , n ;
 
+/// basis for max query ... 
+
 struct Basis {
     i64 a[64];
     bool insert(i64 x) {
@@ -73,3 +75,51 @@ int32_t main()
 
     return 0 ;
 }
+
+/// check whether we can reduce or not ... 
+
+
+struct Basis
+{
+    vector<int> basis;
+    int reduce(int x)
+    {
+        for (auto b : basis) if ((x ^ b) < x) x ^= b;
+        return x;
+    }
+    void insert(int x)
+    {
+        int r = reduce(x);
+        if (r) basis.pb(r);
+    }
+};
+
+int32_t main()
+{
+    IOS
+
+    int test ;
+    cin>>test ;
+    while(test--)
+    {
+        cin>>n ;
+        Basis b ;
+        for(int i=0; i<n; i++)
+        {
+            cin>>a[i] ;
+        }
+        string s ;
+        cin>>s ; bool f = 0 ;
+        for(int i=n-1; i>=0; i--)
+        {
+            if(s[i]=='0')
+                b.insert(a[i]) ;
+            else if(b.reduce(a[i]))
+                f=1 ;
+        }
+        cout<<f<<endl ;
+    }
+
+    return 0 ;
+}
+
