@@ -1,0 +1,170 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define pb push_back
+#define pf push_front
+#define pob pop_back
+#define pof pop_front
+#define ff first
+#define ss second
+#define PLL pair<ll,ll>
+#define pii pair<int,int>
+#define SetBit(x, k) (x |= (1LL << k))
+#define ClearBit(x, k) (x &= ~(1LL << k))
+#define CheckBit(x, k) (x & (1LL << k))
+#define scn(n) scanf("%d",&n)
+#define scnll(n) scanf("%lld",&n)
+#define nl cout<<"\n"
+#define YES cout<<"YES\n"
+#define Yes cout<<"Yes\n"
+#define yes cout<<"yes\n"
+#define NO cout<<"NO\n"
+#define No cout<<"No\n"
+#define no cout<<"no\n"
+#define mod 1000000007LL
+#define mod1 1000000007LL
+#define mod2 1000000009LL
+#define inf 1000000000000000LL
+#define N 200000
+#define fastio std::ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+const ll sz = 2e5 + 10;
+vector <PLL> g[sz];
+ll sub[sz], in[sz], out[sz], head[sz], tim;
+ll par[sz], tr[4*sz],a[sz],aa[sz],edg_up[sz];
+
+map<PLL,ll> edg;
+
+void dfs_siz(ll u, ll p)
+{
+    sub[u] = 1, par[u] = p;
+    for(PLL &v : g[u]) {
+        if(v.ff == p)
+            continue;
+        dfs_siz(v.ff, u);
+        sub[u] += sub[v.ff];
+        if(sub[v.ff] > sub[ g[u][0].ff ])
+            swap(v, g[u][0]);
+    }
+}
+
+void dfs_hld(ll u, ll p,ll cst)
+{
+    if(p == -1) head[u] = u; // root
+    in[u] = ++tim;
+    a[tim]=cst;
+    if(p!=-1) edg_up[edg[{p,u}]]=u;
+    for(PLL &v : g[u]) {
+        if(v.ff == p)
+            continue;
+        head[v.ff] = (v.ff==g[u][0].ff? head[u] : v.ff);
+        dfs_hld(v.ff, u, v.ss);
+    }
+    out[u] = tim;
+}
+
+// Typical Segment Tree on [1, tim] range
+void build(ll lo, ll hi, ll node)
+{
+    if(lo == hi) {
+        tr[node] = a[lo];
+        return;
+    }
+    ll mid = lo+hi>>1, lft=node<<1, rgt=lft|1;
+    build(lo, mid, lft);
+    build(mid+1, hi, rgt);
+    tr[node] = tr[lft]+tr[rgt];
+}
+
+void update(ll lo, ll hi, ll idx, ll v, ll node)
+{
+    if(lo > idx || hi < idx)
+        return;
+    if(lo == hi) {
+        tr[node] = v;
+        return;
+    }
+    ll mid = lo+hi>>1, lft=node<<1, rgt=lft|1;
+    update(lo, mid, idx, v, lft);
+    update(mid+1, hi, idx, v, rgt);
+    tr[node] = tr[lft]+tr[rgt];
+}
+
+ll query(ll lo, ll hi, ll l, ll r, ll node)
+{
+    if(lo > r || hi < l)
+        return 0;
+    if(lo >= l && hi <= r)
+        return tr[node];
+    ll mid = lo+hi>>1, lft=node<<1, rgt=lft|1;
+    return (query(lo, mid, l, r, lft)+query(mid+1, hi, l, r, rgt));
+}
+// Segment Tree Ends
+
+bool isAncestor(int p,int u){
+    return in[p]<=in[u]&&out[p]>=out[u];
+}
+
+void upd_val(ll u, ll val) {
+    update(1, tim, in[u], val, 1);
+}
+
+ll query_path(ll u, ll v)
+{
+    ll ret = 0;
+    while(!isAncestor(head[u],v)) {
+        ret+=query(1,tim, in[head[u]], in[u], 1);
+        u=par[head[u]];
+    }
+    swap(u,v);
+    while(!isAncestor(head[u],v)) {
+        ret+=query(1,tim, in[head[u]], in[u], 1);
+        u=par[head[u]];
+    }
+    if(in[v]<in[u])swap(u,v);
+
+    if(in[u]<in[v]) ret+=query(1,tim, in[u]+1, in[v], 1);
+
+    return ret;
+}
+
+void clr(ll n) {
+    tim = 0;
+    edg.clear();
+    for(ll i=1; i <=n; i++)
+        g[i].clear();
+}
+
+
+int main()
+{
+    fastio;
+    ll t, n, q, u, v, op, root=1,c;
+    cin>>n;
+    for(ll i=1; i<n; i++) {
+        cin>>u>>v>>c;
+        g[u].pb({v,c}), g[v].pb({u,c});
+        edg[{u,v}]=i;
+        edg[{v,u}]=i;
+    }
+
+    dfs_siz(root, -1);
+    dfs_hld(root, -1,0);
+
+    build(1, tim, 1);
+
+    cin>>q;
+
+    while(q--) {
+        cin>>op;
+        cin>>u>>v;
+        if(op==1){
+            upd_val(edg_up[u], v);
+        }
+        else{
+            cout<<query_path(u, v);nl;
+        }
+    }
+    return 0;
+}
+
