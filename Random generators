@@ -28,6 +28,12 @@ using namespace std;
 #define mod 998244353
 #define N 300005
 
+{
+include this headers
+#include <chrono>
+#include <iostream>
+#include <random>
+}
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 inline ll gen_random(ll l, ll r) {
