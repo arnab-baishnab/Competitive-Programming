@@ -42,6 +42,9 @@ LL ncr(LL n,LL r){
     if(Fact[0]==0)
     {
         Fact[0]=1 , Inv[0]=inverse_mod(1) ;
+
+invfact[n] = power (fact[n],MOD - 2,MOD);
+	for (int i = n - 1;i >= 0;i--) invfact[i] = invfact[i + 1] * (i + 1) % MOD;
         for(int i=1;i<N;i++)Fact[i]=Fact[i-1]*i%MOD,Inv[i]=inverse_mod(Fact[i]) ;
     }
     r=Inv[r]*Inv[n-r]%MOD;
