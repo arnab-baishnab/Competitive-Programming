@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   pb             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=4*81*81+7;
+
+bitset<N>vis[81][81] ;
+
+vis[1][1].set(s+c[1][1]) ;   /// make bit on 
+vis[1][1].set(s-c[1][1]) ;
+
+    for(int i=1; i<=h; i++)
+    {
+        for(int j=1; j<=w; ++j)
+        {
+            if(i==1 and j==1)continue ;
+
+            if(i-1)
+                vis[i][j]|=(vis[i-1][j]<<c[i][j]), vis[i][j]|=(vis[i-1][j]>>c[i][j]) ; /// treat it just like a number. 
+
+            if(j-1)
+                vis[i][j]|=(vis[i][j-1]<<c[i][j]), vis[i][j]|=(vis[i][j-1]>>c[i][j]) ;
+        }
+    }
+
+int32_t main()
+{
+    IOS
+
+    cin>>h>>w ;
+
+    for(int i=1; i<=h; i++)
+    {
+        for(int j=1; j<=w; ++j)
+        {
+            cin>>a[i][j] ;
+        }
+    }
+
+    for(int i=1; i<=h; i++)
+    {
+        for(int j=1; j<=w; j++)
+        {
+            cin>>b[i][j] ;
+
+            c[i][j] = abs(a[i][j]-b[i][j]) ;
+        }
+    }
+
+    calc(ori) ;
+
+    cout<<ans<<endl ;
+
+    return 0 ;
+}
