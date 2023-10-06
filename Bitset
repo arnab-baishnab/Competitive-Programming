@@ -22,6 +22,144 @@ using namespace std ;
 typedef long long LL ;
 
 const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int oo=MOD*MOD*1LL ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int n, a[N], x, y ;
+
+bitset<50000>b[8007] ;
+
+void reset()
+{
+    for(int i=0;i<8007;i++)
+    {
+        b[i].reset() ;
+    }
+}
+
+int32_t main()
+{
+    IOS
+
+    string s ;
+
+    cin>>s>>x>>y ;
+
+    n = s.size() ;
+
+    b[0][25000]=1 ;
+
+    s='#'+s+'#' ;
+
+    vector<int>vec ;
+
+    vec.pb(0) ;
+
+    for(int i=1,c=0;i<s.size();++i)
+    {
+        if(s[i]=='T' or s[i]=='#')
+        {
+            if(c)
+            vec.pb(c) ;
+            c = 0 ;
+            if(s[i]=='T')
+                vec.pb(-1) ;
+        }
+        else
+            ++c ;
+    }
+
+    n = vec.size()-1 ;
+
+    for(int i=1,c=0,f=1;i<vec.size();++i)
+    {
+        if(vec[i]==-1)
+        {
+            c^=1 ;
+            b[i]|=b[i-1] ;
+            f = 0 ;
+        }
+        else if(c==0)
+        {
+            if(f)
+                b[i]|=(b[i-1]<<vec[i]) , f=0 ;
+            else
+                b[i]|=(b[i-1]<<vec[i]) , b[i]|=(b[i-1]>>vec[i]) ;
+        }
+        else
+        {
+            b[i]|=b[i-1] ;
+        }
+    }
+
+    if(b[n][25000+x]==0)
+    {
+        cout<<"No\n" ;
+        exit(0) ;
+    }
+
+    reset() ;
+
+    x = y ;
+
+    b[0][25000]=1 ;
+
+    for(int i=1,c=0;i<vec.size();++i)
+    {
+        if(vec[i]==-1)
+        {
+            c^=1 ;
+            b[i]|=b[i-1] ;
+        }
+        else if(c)
+        {
+            b[i]|=(b[i-1]<<vec[i]) ;
+            b[i]|=(b[i-1]>>vec[i]) ;
+        }
+        else
+        {
+            b[i]|=b[i-1] ;
+        }
+    }
+
+    if(b[n][25000+x]==0)
+    {
+        cout<<"No\n" ;
+        exit(0) ;
+    }
+
+    cout<<"Yes\n" ;
+
+    return 0 ;
+}
+
+
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   pb             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
 const int N=4*81*81+7;
 
 bitset<N>vis[81][81] ;
