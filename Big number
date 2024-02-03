@@ -1,0 +1,56 @@
+
+/// too big number handled with __int128_t + Hashing
+/// https://atcoder.jp/contests/abc339/tasks/abc339_f 
+
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+__int128_t M = 10000000000000000007;
+
+__int128_t hsh (string &s)
+
+{
+    __int128_t ans = 0;
+    for (int i=0; i<s.size(); i++)
+    {
+        ans*=10;
+        ans+=s[i]-'0';
+        ans%=M;
+        // cout <<"ans=" <<ans <<"\n";
+    }
+    return ans;
+}
+
+
+
+
+
+
+
+signed main()
+{
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(NULL);
+
+    int n; cin >>n;
+    vector <string> x(n);
+    vector <__int128_t> v(n);
+    map<__int128_t, int> mp;
+    int i=0;
+    for (auto &it: x) {cin >>it; v[i]=hsh(it); mp[v[i]]++;  i++; }
+    int ans =0;
+    for (int i=0; i<n; i++)
+    {
+        for (int j=0; j<n; j++)
+        {
+            __int128_t mul = v[i]*v[j];
+            mul%=M;
+            ans+=mp[mul];
+            // cout <<"ans=" <<ans <<"\n";
+        }
+    }
+
+    cout <<ans <<"\n";
+
+}
