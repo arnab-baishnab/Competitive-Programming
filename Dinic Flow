@@ -1,5 +1,11 @@
-
+/**
 maxflow YouKnowWho 's template ...  https://codeforces.com/contest/498/submission/45850199
+(i)
+/// konig's theorem :
+In any bipartite graph, the number of edges in a maximum matching equals the number of vertices in a minimum vertex cover.
+https://en.wikipedia.org/wiki/K%C5%91nig%27s_theorem_(graph_theory)
+problem: https://codeforces.com/gym/104945/problem/B
+/**/
 
 struct edge{
 	int to, rev, flow, w;
