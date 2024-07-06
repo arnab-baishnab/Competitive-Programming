@@ -1,0 +1,141 @@
+/// used to solve https://codeforces.com/problemset/problem/1245/D
+/// can find minimum spanning tree in O(n*n)
+/// will traverse all n*n edges and not required any log(n) factor to find minimum cost edge. 
+/// initially all nodes make edge with node 0, that 0 is the root  
+
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   pb             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+#define   edge(u,v)      adj[u].pb(v) , adj[v].pb(u)
+#define   white          0
+#define   blue           1
+#define   red            2
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7 ;
+const int N=2e6+7 ;
+const int oo=2LL*MOD*MOD*1LL+MOD ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int n, x[2003], y[2003], c[2003], k[2003], p[2003];
+
+int Manhattan_Distance(int i, int j)
+{
+    return abs(x[i] - x[j]) + abs(y[i] - y[j]);
+}
+
+int Cost(int u, int v)
+{
+    return Manhattan_Distance(u, v)*(k[u] + k[v]);
+}
+
+void Prims_Spanning_Tree(int &sm, vector<int> &tower, vector<pii> &e)
+{
+    vector<int>dp(n+5, oo), pa(n+5, 0), used(n+5, 0);
+
+    for(int i=1; i<=n; i++)
+    {
+        dp[i] = c[i];
+    }
+
+    for(int it=1; it<=n; ++it)
+    {
+        int v = n+1;
+        for(int u=1; u<=n; ++u)
+        {
+            if(!used[u] and dp[u]<dp[v])
+            {
+                v = u;
+            }
+        }
+        used[v] = 1;
+        sm += dp[v];
+        if(pa[v]==0)
+        {
+            tower.push_back(v);
+        }
+        else
+        {
+            e.push_back({pa[v], v});
+        }
+        /// update ...
+        for(int u=1; u<=n; ++u)
+        {
+            if(!used[u] and Cost(u, v)<dp[u])
+            {
+                dp[u] = Cost(u, v);
+                pa[u] = v;
+            }
+        }
+    }
+}
+
+int32_t main()
+{
+    IOS
+
+    cin>>n;
+
+    for(int i=1; i<=n; i++)
+    {
+        cin>>x[i]>>y[i];
+    }
+
+    vector<pii>vec;
+
+    for(int i=1; i<=n; i++)
+    {
+        cin>>c[i];
+        vec.pb({c[i], i});
+    }
+
+    for(int i=1; i<=n; i++)
+    {
+        cin>>k[i];
+    }
+
+    int sm = 0;
+
+    vector<pii>e;
+
+    vector<int>tower;
+
+    Prims_Spanning_Tree(sm, tower, e);
+
+    cout<<sm<<endl;
+
+    cout<<n - e.size()<<endl;
+
+    for(int t:tower)
+    {
+        cout<<t<<' ';
+    }
+
+    cout<<endl<<e.size()<<endl;
+
+    for(pii p:e)
+    {
+        cout<<p.ff<<' '<<p.ss<<endl;
+    }
+
+    return 0;
+}
