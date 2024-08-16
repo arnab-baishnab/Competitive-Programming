@@ -1,6 +1,6 @@
 
-/// too big number handled with __int128_t + Hashing
-/// https://atcoder.jp/contests/abc339/tasks/abc339_f 
+/// too big number multiplication handled with __int128_t + Hashing
+/// Practice Problem : https://atcoder.jp/contests/abc339/tasks/abc339_f 
 
 #include <bits/stdc++.h>
 using namespace std;
