@@ -1,5 +1,54 @@
+/*
+Practice:
 
-trie used to solve https://codeforces.com/contest/842/problem/D ; https://codeforces.com/problemset/problem/282/E ;
+Problem : https://codeforces.com/contest/842/problem/D 
+Solution: https://codeforces.com/contest/842/submission/152356883 
+
+Problem : https://codeforces.com/problemset/problem/282/E 
+Solution: https://codeforces.com/contest/282/submission/152987420
+
+Problem : https://codeforces.com/problemset/problem/633/C
+Solution: https://codeforces.com/problemset/submission/633/276810614
+
+/**/
+
+// for distinct 26 characters. 
+
+struct node{
+    node *ch[26] ;
+    bool isEnd;
+    node()
+    {
+        isEnd = false;
+        for(int i=0; i<26; i++)
+        {
+            ch[i] = NULL;
+        }
+    }
+}*Root = new node();
+
+void Insert(string s){
+    node *curr=Root ;
+    int i=0;
+    for(char x:s)
+    {
+        i++;
+        if(curr->ch[x-'a']==NULL)
+        {
+            curr->ch[x-'a']=new node() ;
+        }
+        curr=curr->ch[x-'a'];
+        if(i==s.size())
+        {
+            curr->isEnd = true;
+            break;
+        }
+    }
+}
+
+-----------------------------------
+
+// for binary string 0/1.
 
 struct node{
     node *ch[2] ;
