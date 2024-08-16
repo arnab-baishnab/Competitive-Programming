@@ -1,6 +1,11 @@
-/*** collected from https://codeforces.com/contest/390/submission/91977676 
-this technique used to update in a range[a,b] and also to query in bit 
-/***/
+/// BIT is known as Binary Indexed Tree or Fenwick Tree.  
+/// Only works for range [l, r] update / query for summation. 
+/// If you need to find maximum / minimum of any range [l, r], then you should use Segment Tree. 
+/// It's faster than Segment Tree 
+
+const int N = 1e6+7; 
+
+int tree[N]; 
 
 void update(int idx, int x,int n)
 {
@@ -25,108 +30,4 @@ int query(int idx)
 int ask(int l,int r)
 {
     return query(r) - query(l-1) ; 
-}
-
-#include<bits/stdc++.h>
-using namespace std;
-#define   MP             make_pair
-#define   PB             push_back
-#define   nn             '\n'
-#define   endl           '\n'
-#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
-#define   aint(vec)      vec.begin(),vec.end()
-#define   int            long long
-#define   pii            pair<int,int>
-
-
-const int MOD=1e9+7,Base=998244353 ;
-const int INF=1LL*1000*1000*1000*1000*1000*1000+7LL, INF2=(1LL<<62) ;
-const double pie=acos(-1.0) ;
-const double EPS=1e-9 ;
-
-
-const int N=4e6+5;
-const int oo=1e9+7;
-
-
-int Tree[4][N];
-
-void update(int j, int idx, int x,int n)
-{
-	/// Let, n is the number of elements and our queries are
-	/// of the form query(n)-query(l-1), i.e range queries
-	/// Then, we should never put N or MAX in place of n here.
-	while(idx<=n)
-	{
-		Tree[j][idx]+=x;
-		idx+=(idx&-idx);
-	}
-}
-
-int query(int j , int idx)
-{
-	int sum=0;
-	while(idx>0)
-	{
-		sum+=Tree[j][idx];
-		idx-=(idx&-idx);
-	}
-	return sum;
-}
-/// To add v in range [a, b]: Update(a, v), Update(b+1, -v) in the first BIT and Update(a, v*(a-1)) and Update(b+1, -v*b) on the second BIT.
-/// To get sum in range [0, x]: you simply do Query_BIT1(x)*x - Query_BIT2(x);
-/// Now you know how to find range sum for [a, b]. Just find sum(b) - sum(a-1) using the formula stated above.
-
-int updx(int l,int r,int v,int n)
-{
-    update(0 , l, v, n);
-    update(0 , r+1, -v, n);
-    update(1 ,l, v * (l-1) , n);
-    update(1 ,r+1,- v * (r) , n);
-}
-int sumx(int i)
-{
-     return query(0 , i) * i - query(1 , i);
-}
-int updy(int l,int r,int v,int n)
-{
-    update(2 , l, v, n);
-    update(2 , r+1, -v, n);
-    update(3 ,l, v * (l-1) , n);
-    update(3 ,r+1,- v * (r) , n);
-}
-int sumy(int i)
-{
-     return query(2 , i) * i - query(3 , i);
-}
-
-int32_t main()
-{
-    IOS
-
-    int n , m , w , a=0 ;
-
-    cin>>n>>m>>w ;
-
-    while(w--){
-
-        int t,x1,x2,y1,y2,v ;
-
-        cin>>t>>x1>>y1>>x2>>y2 ;
-
-        if(t)
-        {
-            cout<<sumx(x2)-sumx(x1-1)+sumy(y2)-sumy(y1-1)-a<<endl ;
-        }
-        else
-        {
-            cin>>v ;
-            updx(x1,x2,v*(y2-y1+1),n) ;
-            updy(y1,y2,v*(x2-x1+1),m) ;
-            a+=(x2-x1+1)*(y2-y1+1)*v ;
-        }
-    }
-
-    return 0 ;
 }
