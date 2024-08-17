@@ -51,7 +51,8 @@ struct Hash {
 ---------------------------------------------------------------------------
 
 /// tree hashing ... 
-/// https://codeforces.com/problemset/problem/1800/G
+/// problem : https://codeforces.com/problemset/problem/1800/G
+/// solution: https://codeforces.com/contest/1800/submission/196155988
 
 vector<int> bas = {181, 197,233,281,293};
 vector<int> mod = {114802019,969832723,480566959,185749469,851370397};
