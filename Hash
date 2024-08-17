@@ -2,6 +2,8 @@
 
 // problem : https://codeforces.com/contest/535/problem/D 
 // solution: https://codeforces.com/contest/535/submission/276911762
+// problem : https://drive.google.com/file/d/1qr6Nnk2Eh4bWUp09OdQ-shm1Krt8uAqB/view  [ icpc 21 preli D no ] 
+// solution: mentioned below. 
 
 const ll MAX_N = 1e6+10, mod = 2e9+63, base1 = 1e9+21, base2 = 1e9+181;
 int s[MAX_N];  // 1-indexed
