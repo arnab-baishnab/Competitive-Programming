@@ -1,0 +1,312 @@
+prac prob : https://atcoder.jp/contests/abc367/tasks/abc367_f
+solution  : https://atcoder.jp/contests/abc367/submissions/56826210
+prac prob : https://codeforces.com/problemset/problem/1800/G
+solution  : https://codeforces.com/contest/364/submission/173683838 
+solution  : https://codeforces.com/contest/364/submission/173683390
+
+/// Here unsigned long long number used. So, overflow won't be a issue. 
+
+//{
+//include this headers
+#include <chrono>
+#include <iostream>
+#include <random>
+//}
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+inline ll gen_random(ll l, ll r) {
+    return uniform_int_distribution<ll>(l, r)(rng);
+}
+
+unsigned ll vals[N][10];
+unsigned ll hsh[N];
+
+unsigned ll pa[N][10], pb[N][10], a[N], b[N], test, n;
+
+void init()
+{
+    for(int i=1; i<=n; i++)
+    {
+        for(int j=0; j<10; ++j)
+        {
+            unsigned ll v = vals[a[i]][j];
+            pa[i][j] = v + pa[i-1][j];
+            v = vals[b[i]][j];
+            pb[i][j] = v + pb[i-1][j];
+        }
+    }
+}
+
+bool Equal(int l, int r, int L, int R)
+{
+    for(int i=0; i<10; ++i)
+    {
+        unsigned ll v1 = pa[r][i] - pa[l-1][i];
+        unsigned ll v2 = pb[R][i] - pb[L-1][i];
+        if(v1!=v2)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < 10; j++){
+            vals[i][j] = gen_random(0, 1e17);
+        }
+    }
+}
+
+/// template ends here. 
+
+
+/// these are some ac solutions. 
+/// you can ignore those. 
+
+
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   EB             emplace_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7,Base=998244353 ;
+const int N=1e6+7 ;
+const int oo=1LL*1000*1000*1000*1000*1000*1000+7LL ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+vector<int> bas = {181, 197,233,281,293};
+vector<int> mod = {114802019,969832723,480566959,185749469,851370397};
+
+bool sym[N];
+
+array<int,5> hsh[N],dp[N];
+
+vector<int>adj[N] , oadj[N] ;
+
+void dfs(int nd,int lvl,int pa=0)
+{
+    map<vector<int>,int>cnt ;
+    map<vector<int>,vector<int>>who ;
+    for(int i=0; i<5; i++)
+        dp[nd][i] = 1 ;
+    for(int ch:adj[nd])
+    {
+        if(ch==pa)continue ;
+        dfs(ch,lvl+1,nd) ;
+        vector<int>vc ;
+        for(int i=0; i<5; i++)
+        {
+            dp[nd][i]*=(hsh[lvl][i]+dp[ch][i]) ;
+            dp[nd][i]%=mod[i] ;
+            vc.PB(dp[ch][i]) ;
+        }
+        cnt[vc]++ ;
+        who[vc].PB(ch) ;
+    }
+    int odd = 0 ;
+    for(auto it:cnt){
+        if(it.ss&1){
+        ++odd ;
+        for(int ch:who[it.ff])
+            oadj[nd].PB(ch) ;
+        }
+    }
+    sym[nd]=(bool)(odd<=1) ;
+}
+
+int32_t main()
+{
+    IOS
+
+    for(int i=0; i<5; i++)
+        hsh[0][i]=1 ;
+
+    for(int i=1; i<N; i++)
+        for(int j=0; j<5; j++)
+            hsh[i][j]=bas[j]*hsh[i-1][j]%mod[j] ;
+
+    int test, n  ;
+
+    cin>>test ;
+
+    while(test--)
+    {
+        cin>>n ;
+        for(int i=1; i<n; ++i)
+        {
+            int u, v ;
+            cin>>u>>v ;
+            adj[v].PB(u), adj[u].PB(v) ;
+        }
+        dfs(1,1,0) ;
+        int nd = 1 ;
+        while(oadj[nd].size() and sym[1])
+        {
+            if(oadj[nd].size()==0)break ;
+            if(oadj[nd].size()>1)sym[1] = 0 ;
+            int ch = oadj[nd].back() ;
+            sym[1] = sym[ch] ;
+            nd = ch ;
+        }
+        for(int i=1; i<=n; i++)
+            adj[i].clear() , oadj[i].clear() ;
+        cout<<(sym[1]?"YES":"NO")<<endl ;
+    }
+
+    return 0 ;
+}
+
+toky's code for random generator 
+
+// prac prob : https://codeforces.com/problemset/problem/1800/G
+
+// #pragma GCC optimize("Ofast,unroll-loops")
+// #pragma GCC target("avx,avx2,fma")
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+#define pii pair<int, int>
+#define pll pair<long long, long long>
+#define pb push_back
+#define ff first
+#define ss second
+#define YES cout << "YES\n"
+#define NO cout << "NO\n"
+#define CC(x) cout << "Case " << ++x << ":";
+#define nn "\n"
+#define LL_INF (1LL << 62)
+#define INF (1 << 30)
+#define SetBit(x, k) (x |= (1LL << k))
+#define ClearBit(x, k) (x &= ~(1LL << k))
+#define CheckBit(x, k) ((x>>k)&1)
+#define mod 998244353
+#define N 300005
+
+{
+include this headers
+#include <chrono>
+#include <iostream>
+#include <random>
+}
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+inline ll gen_random(ll l, ll r) {
+    return uniform_int_distribution<ll>(l, r)(rng);
+}
+
+unsigned ll vals[6][N];
+vector<int> g[N];
+unsigned ll dis[N], sz[N], deg[N], par_deg[N], par[N];
+unsigned ll hsh[N];
+
+void dfs(int u, int p){
+    dis[u] = dis[p]+1;
+    sz[u] = 1;
+    par[u] = p;
+    if(u!=1) deg[u] = 1;
+
+    for(int v: g[u]){
+        if(v==p) continue;
+        dfs(v, u);
+        sz[u] += sz[v];
+        deg[u]++;
+    }
+}
+
+void get_hash(int u, int p){
+    unsigned ll h = vals[0][dis[u]]*vals[1][sz[u]]*vals[2][deg[u]]*vals[3][par_deg[par[u]]];
+    unsigned ll z = 1;
+    for(int v: g[u]){
+        if(v==p) continue;
+        get_hash(v, u);
+        z *= hsh[v];
+    }
+    h += z;
+    hsh[u] = h;
+}
+
+int check(int u, int p){
+    map<unsigned ll, int> mp;
+    map<unsigned ll, int> mp2;
+    
+    for(int v: g[u]){
+        if(v==p) continue;
+        mp[hsh[v]]++;
+        mp2[hsh[v]] = v;
+    }
+
+    vector<int> z;
+    for(auto it: mp){
+        if(it.ss%2==0) continue;
+        z.pb(mp2[it.ff]);
+    }
+
+    if(z.size()>1) return 0;
+    if(z.empty()) return 1;
+    return check(z[0], u);
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < 4; j++){
+            vals[j][i] = gen_random(0, 1e17);
+        }
+    }
+    
+    int t;
+	cin >> t;
+	while(t--){
+	    int n;
+        cin >> n;
+
+        for(int i = 0; i <= n; i++){
+            g[i].clear();
+        }
+
+        for(int i = 0; i < n-1; i++){
+            int u, v;
+            cin >> u >> v;
+            g[u].pb(v);
+            g[v].pb(u);
+        }
+
+        dfs(1, 0);
+        get_hash(1, 0);
+
+        if(check(1, 0)) YES;
+        else NO;
+	}
+
+    return 0;
+}
