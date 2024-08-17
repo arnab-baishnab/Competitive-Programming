@@ -1,3 +1,129 @@
+// use as many base/mod value as you need and adjust the 
+
+// problem : https://codeforces.com/contest/535/problem/D 
+// solution: https://codeforces.com/contest/535/submission/276911762
+
+const ll MAX_N = 1e6+10, mod = 2e9+63, base1 = 1e9+21, base2 = 1e9+181;
+int s[MAX_N];  // 1-indexed
+ll pw1[MAX_N], pw2[MAX_N], slen;
+
+void pw_calc() {
+    pw1[0] = pw2[0] = 1;
+    for(int i = 1; i < MAX_N; i++) {
+        pw1[i] = (pw1[i-1] * base1) % mod;
+        pw2[i] = (pw2[i-1] * base2) % mod;
+    }
+}
+
+struct Hash {
+    ll h1[MAX_N], h2[MAX_N];
+
+    void init() {
+        h1[0] = h2[0] = 0;
+        for(int i = 1; i <= slen; i++) {
+            h1[i] = (h1[i-1] * base1 + s[i]) % mod;
+            h2[i] = (h2[i-1] * base2 + s[i]) % mod;
+        }
+    }
+
+    inline ll hashVal(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod;
+        if(hsh1 < 0) hsh1 += mod;
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod;
+        if(hsh2 < 0) hsh2 += mod;
+        return (hsh1 << 32) | hsh2;
+    }
+
+    inline ll hashOne(int l, int r) {
+        ll hsh1 = (h1[r] - h1[l-1] * pw1[r-l+1]) % mod;
+        if(hsh1 < 0) hsh1 += mod;
+        return hsh1;
+    }
+
+    inline ll hashTwo(int l, int r) {
+        ll hsh2 = (h2[r] - h2[l-1] * pw2[r-l+1]) % mod;
+        if(hsh2 < 0) hsh2 += mod;
+        return hsh2;
+    }
+} fw;
+
+
+---------------------------------------------------------------------------
+
+/// tree hashing ... 
+/// https://codeforces.com/problemset/problem/1800/G
+
+vector<int> bas = {181, 197,233,281,293};
+vector<int> mod = {114802019,969832723,480566959,185749469,851370397};
+
+bool sym[N];
+
+array<int,5> hsh[N],dp[N];
+
+vector<int>adj[N] , oadj[N] ;
+
+void dfs(int nd,int lvl,int pa=0)
+{
+    map<vector<int>,int>cnt ;
+    map<vector<int>,vector<int>>who ;
+    for(int i=0; i<5; i++)
+        dp[nd][i] = 1 ;
+    for(int ch:adj[nd])
+    {
+        if(ch==pa)continue ;
+        dfs(ch,lvl+1,nd) ;
+        vector<int>vc ;
+        for(int i=0; i<5; i++)
+        {
+            dp[nd][i]*=(hsh[lvl][i]+dp[ch][i]) ;
+            dp[nd][i]%=mod[i] ;
+            vc.PB(dp[ch][i]) ;
+        }
+        cnt[vc]++ ;
+        who[vc].PB(ch) ;
+    }
+    int odd = 0 ;
+    for(auto it:cnt){
+        if(it.ss&1){
+        ++odd ;
+        for(int ch:who[it.ff])
+            oadj[nd].PB(ch) ;
+        }
+    }
+    sym[nd]=(bool)(odd<=1) ;
+}
+
+int32_t main()
+{
+    IOS
+
+    for(int i=0; i<5; i++)
+        hsh[0][i]=1 ;
+
+    for(int i=1; i<N; i++)
+        for(int j=0; j<5; j++)
+            hsh[i][j]=bas[j]*hsh[i-1][j]%mod[j] ;
+
+    return 0 ;
+}
+
+// template ends here.
+--------------------------------
+
+
+
+
+
+
+
+
+
+
+// these are some of the ac solutions 
+// you can ignore them. 
+---------------------------------------------------------------------------------------------------------
+
+
 /// palindrome check with double hashing 
 
 /// ac code of icpc preli 2021 
