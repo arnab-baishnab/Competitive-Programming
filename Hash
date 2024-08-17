@@ -131,7 +131,7 @@ int32_t main()
 
 /// palindrome check with double hashing 
 
-/// ac code of icpc preli 2021 
+/// ac code of icpc preli 2021 D no
 
 #include<bits/stdc++.h>
 using namespace std;
