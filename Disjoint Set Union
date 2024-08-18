@@ -1,3 +1,10 @@
+//prac prob: https://codeforces.com/problemset/problem/566/D
+//solution : https://codeforces.com/contest/566/submission/277054768
+
+const int N = 1e6+7; 
+
+int p[N]; 
+
 int Find_Parent(int node){
     if(p[node]==node)
         return node ;
@@ -7,3 +14,70 @@ int Find_Parent(int node){
 void Union(int u,int v){
     p[Find_Parent(u)]=Find_Parent(v) ;
 }
+
+/// dsu in range.  
+/// this is quite rare case but interesting. 
+
+int tree[N];
+
+void update(int idx, int x,int n)
+{
+    if(vis[idx])
+    {
+        return;
+    }
+    vis[idx]=1;
+    while(idx<=n)
+    {
+        tree[idx]+=x;
+        idx+=(idx&-idx);
+    }
+}
+
+int query(int idx)
+{
+    int sum=0;
+    while(idx>0)
+    {
+        sum+=tree[idx];
+        idx-=(idx&-idx);
+    }
+    return sum ;
+}
+
+int ask(int l,int r)
+{
+    return query(r) - query(l) ;
+}
+
+int p[N];
+
+int Find_Parent(int node)
+{
+    if(p[node]==node)
+        return node ;
+    return p[node]=Find_Parent(p[node]) ;
+}
+
+void Union(int u,int v)
+{
+    p[Find_Parent(u)]=Find_Parent(v) ;
+}
+
+void RangeUnion(int l, int r)
+{
+    if(l>r or l==r or ask(l, r)==r-l)
+    {
+        return;
+    }
+    Union(l, r);
+    int md = (l+r)/2;
+    RangeUnion(l, md);
+    RangeUnion(md+1, r);
+    if(md+1<=r)
+    {
+        update(md+1, +1, n);
+    }
+}
+
+
