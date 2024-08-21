@@ -1,4 +1,5 @@
-/// Fully trusted code , implemented by me . 
+prob:      https://codeforces.com/problemset/problem/1992/G
+solution:  https://codeforces.com/problemset/submission/1992/277568061
 
 int extended_euclid(LL a,LL b,LL &x,LL &y){
     if(b==0)
@@ -36,21 +37,32 @@ int mod_expo(int a,int b){
     x=x*x%MOD ; if(b&1)x=x*a%MOD ; return x ;
 }
 
-LL ncr(LL n,LL r){
+LL ncr(LL n,LL r){   /// this function calculates ncr upto N = 1e6 in O(n) time.
     if(r>n)
-        return 0 ;
-    if(Fact[0]==0)
     {
-        Fact[0]=1 , Inv[0]=inverse_mod(1) ;
-
-invfact[n] = power (fact[n],MOD - 2,MOD);
-	for (int i = n - 1;i >= 0;i--) invfact[i] = invfact[i + 1] * (i + 1) % MOD;
-        for(int i=1;i<N;i++)Fact[i]=Fact[i-1]*i%MOD,Inv[i]=inverse_mod(Fact[i]) ;
+        return 0 ;
+    }
+    if(Fact[0]==0)   /// for initialization.
+    {
+        Fact[0]=1;
+        for(int i=1;i<N;i++)
+        {
+            Fact[i]=Fact[i-1]*i%MOD;
+        }
+        Inv[N-1] = mod_expo(Fact[N-1],MOD - 2);
+        for (int i = N-2; i>=0; i--)
+        {
+            Inv[i] = Inv[i + 1] * (i + 1) % MOD;
+        }
     }
     r=Inv[r]*Inv[n-r]%MOD;
     return Fact[n]*r%MOD;
     /// ncr calculate using triangle formula nCr = (n-1)Cr + (n-1)C(r-1) ;
 }
+
+
+------------------------------------------------------------
+
 
 void Stirling_Number()
 {
@@ -89,7 +101,7 @@ why  :
 
 
 
-//// online modulo operation .... 
+//// for online contest modulo operation .... 
 
 #include<bits/stdc++.h>
 using namespace std;
