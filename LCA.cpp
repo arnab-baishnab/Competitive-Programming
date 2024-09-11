@@ -1,3 +1,5 @@
+/// lca used to solve https://codeforces.com/problemset/problem/1583/E
+
 #include<bits/stdc++.h>
 using namespace std;
 #define   MP             make_pair
@@ -21,8 +23,6 @@ const double EPS=1e-9 ;
 int n , test , anc[N][20] , d[N] ;
 
 vector<int>adj[N] ;
-
-/// lca used to solve https://codeforces.com/problemset/problem/1583/E
 
 void dfs(int nd,int pa=-1,int c=0)
 {
