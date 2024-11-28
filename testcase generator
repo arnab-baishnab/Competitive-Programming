@@ -1,0 +1,132 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#include <fstream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   pb             push_back
+#define   nn             '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long 
+#define   ll             long long 
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+#define   edge(u,v)      adj[u].pb(v) , adj[v].pb(u)
+#define   white          0
+#define   blue           1
+#define   red            2
+
+using namespace std;
+
+typedef long long LL;
+
+const int MOD=998244353;
+const int N=1e6;
+//const int oo=2LL*MOD*MOD*1LL+MOD;
+const double pie=acos(-1.0);
+const double EPS=1e-9;
+
+//include this headers for random generator... 
+#include <chrono>
+#include <iostream>
+#include <random>
+
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+inline ll gen_random(ll l, ll r) {
+    return uniform_int_distribution<ll>(l, r)(rng);
+}
+
+int ask(int l,int r); 
+
+void update(int idx, int x,int n); 
+
+int tree[N+7], p[N+7]; 
+
+int32_t main()
+{
+    IOS
+
+    /// note: assuming n>=1000 and testcases<=1000 ; 
+
+    int testcases = 10; /// edit it manually. 
+
+    int upperLimitOfN = N/testcases; 
+
+    cout<<testcases<<endl; 
+
+    for(int tt=1; tt<=testcases; ++tt){
+        
+        int n = gen_random(1000, upperLimitOfN); 
+
+        fill(tree, tree+n+3, 0); 
+
+        int highestJump = gen_random(10, 50); 
+
+        p[1] = gen_random(1, highestJump); 
+
+        for(int i=2; i<=n; i++){
+            bool trap = (bool)(gen_random(0, 2)==0LL);
+            if(trap){
+                p[i] = 0; 
+            }else {
+                p[i] = gen_random(1, min(highestJump, n-i+1)); 
+                update(i, +1, n);
+            }
+        } 
+        
+        /// makes all cases valid... 
+        for(int i=1; i<=n; i++){
+            if(p[i]){
+                int L = i+1, R = i+p[i]; 
+                if(ask(L, R)==0){                  /// probability of happening this is low...
+                    int j = gen_random(L, R); 
+                    p[j] = gen_random(1, min(highestJump, n-j+1)); 
+                    update(j, +1, n); 
+                }
+            }
+        }
+
+        /// just print the values... 
+        cout<<n<<endl; 
+
+        for(int i=1; i<=n; ++i){
+            cout<<p[i]<<' '; 
+        }
+
+        cout<<endl; 
+    }
+
+    return 0;
+}       
+
+void update(int idx, int x,int n)
+{
+	while(idx<=n)
+	{
+		tree[idx]+=x;
+		idx+=(idx&-idx);
+	}
+}
+
+int query(int idx)
+{
+	int sum=0;
+	while(idx>0)
+	{
+		sum+=tree[idx];
+		idx-=(idx&-idx);
+	}
+	return sum ;
+}
+
+int ask(int l,int r)
+{
+    return query(r) - query(l-1) ; 
+}
