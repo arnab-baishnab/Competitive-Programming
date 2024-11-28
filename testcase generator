@@ -53,55 +53,7 @@ int32_t main()
 {
     IOS
 
-    /// note: assuming n>=1000 and testcases<=1000 ; 
-
-    int testcases = 10; /// edit it manually. 
-
-    int upperLimitOfN = N/testcases; 
-
-    cout<<testcases<<endl; 
-
-    for(int tt=1; tt<=testcases; ++tt){
-        
-        int n = gen_random(1000, upperLimitOfN); 
-
-        fill(tree, tree+n+3, 0); 
-
-        int highestJump = gen_random(10, 50); 
-
-        p[1] = gen_random(1, highestJump); 
-
-        for(int i=2; i<=n; i++){
-            bool trap = (bool)(gen_random(0, 2)==0LL);
-            if(trap){
-                p[i] = 0; 
-            }else {
-                p[i] = gen_random(1, min(highestJump, n-i+1)); 
-                update(i, +1, n);
-            }
-        } 
-        
-        /// makes all cases valid... 
-        for(int i=1; i<=n; i++){
-            if(p[i]){
-                int L = i+1, R = i+p[i]; 
-                if(ask(L, R)==0){                  /// probability of happening this is low...
-                    int j = gen_random(L, R); 
-                    p[j] = gen_random(1, min(highestJump, n-j+1)); 
-                    update(j, +1, n); 
-                }
-            }
-        }
-
-        /// just print the values... 
-        cout<<n<<endl; 
-
-        for(int i=1; i<=n; ++i){
-            cout<<p[i]<<' '; 
-        }
-
-        cout<<endl; 
-    }
+   
 
     return 0;
 }       
